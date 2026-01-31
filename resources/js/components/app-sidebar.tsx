@@ -15,11 +15,23 @@ import {
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 import AppLogo from './app-logo';
+import categories from '@/routes/categories';
+import products from '@/routes/products';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Categories',
+        href: categories.index(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Products',
+        href: products.index(),
         icon: LayoutGrid,
     },
 ];
