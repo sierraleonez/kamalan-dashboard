@@ -7,6 +7,11 @@ interface Category {
     name: string;
 }
 
+interface Merchant {
+    id: number;
+    name: string;
+}
+
 interface Product {
     id: number;
     name: string;
@@ -14,6 +19,7 @@ interface Product {
     display_image?: string;
     price: number;
     category?: Category;
+    merchant?: Merchant;
 }
 
 interface Props {
@@ -38,6 +44,9 @@ export default function ProductShow({ product }: Props) {
                 </div>
                 <div className="mb-2">
                     <span className="font-semibold">Category:</span> {product.category?.name || '-'}
+                </div>
+                <div className="mb-2">
+                    <span className="font-semibold">Merchant:</span> {product.merchant?.name || '-'}
                 </div>
             </div>
         </AppLayout>

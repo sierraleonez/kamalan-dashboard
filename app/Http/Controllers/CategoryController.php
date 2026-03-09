@@ -41,7 +41,7 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        return inertia('categories/show', [
+    return inertia('categories/show', [
             'category' => $category,
         ]);
     }

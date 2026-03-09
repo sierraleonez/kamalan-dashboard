@@ -49,4 +49,12 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
+
+    /**
+     * Get the registries for the user.
+     */
+    public function registries()
+    {
+        return $this->hasMany(Registry::class);
+    }
 }

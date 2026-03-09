@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
-import { Root, Thumb} from '@radix-ui/react-switch';
 import Switch from '@/components/ui/switch';
-
+import products from '@/routes/admin/products';
+import { formatRupiah } from '@/lib/currency';
+import Dropdown from '@/components/ui/dropdown';
 
 
 interface Category {
@@ -16,18 +17,25 @@ interface Category {
   name: string;
 }
 
+interface Merchant {
+  id: number;
+  name: string;
+}
+
 interface Props {
   categories: Category[];
+  merchants: Merchant[];
   errors?: Record<string, string[]>;
 }
 
-export default function ProductCreate({ categories, errors = {} }: Props) {
+export default function ProductCreate({ categories, merchants, errors = {} }: Props) {
   const { data, setData, post, processing } = useForm({
     name: '',
     description: '',
     display_image: '',
     affiliate_link: '',
     category_id: '',
+    merchant_id: '',
     price: '',
     enabled: true,
   });
@@ -38,7 +46,7 @@ export default function ProductCreate({ categories, errors = {} }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    post('/products');
+    post(products.store().url);
   };
 
   function handleSwitch(val: boolean) {
@@ -70,8 +78,20 @@ export default function ProductCreate({ categories, errors = {} }: Props) {
           <InputError message={errors.affiliate_link?.[0]} />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="price">Price</Label>
-          <Input id="price" name="price" type="number" value={data.price} onChange={handleChange} required placeholder="Price" />
+          <Label htmlFor="price">Price (IDR)</Label>
+          <Input
+            id="price"
+            name="price"
+            type="text"
+            inputMode="numeric"
+            value={data.price ? formatRupiah(data.price) : ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              const raw = e.target.value.replace(/\D/g, '');
+              setData('price', raw);
+            }}
+            required
+            placeholder="Enter price in Rupiah (e.g., 250000)"
+          />
           <InputError message={errors.price?.[0]} />
         </div>
         <div className="grid gap-2">
@@ -85,8 +105,20 @@ export default function ProductCreate({ categories, errors = {} }: Props) {
           <InputError message={errors.category_id?.[0]} />
         </div>
         <div className="grid gap-2">
+          <Label htmlFor="merchant_id">Merchant</Label>
+          <Dropdown
+            items={merchants}
+            value={data.merchant_id}
+            id='merchant_id'
+            name='merchant_id'
+            onChange={handleChange}
+            placeholder="Select Merchant"
+          />
+          <InputError message={errors.merchant_id?.[0]} />
+        </div>
+        <div className="grid gap-2">
           <Label htmlFor="enabled">Enabled</Label>
-          <Switch/>
+          <Switch checked={!!data.enabled} onCheckedChange={handleSwitch} />
         </div>
         <div className="flex items-center gap-4">
           <Button disabled={processing}>Create</Button>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MinimalTable from '@/components/minimal-table';
 import AppLayout from '@/layouts/app-layout';
-import productsRoute from '@/routes/products';
+import productsRoute from '@/routes/admin/products';
 import { Trash2 } from 'lucide-react';
 import { router } from '@inertiajs/react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
@@ -12,7 +12,9 @@ type Product = {
     description?: string;
     display_image?: string;
     price: number;
+    formatted_price: string;
     category?: { id: number; name: string };
+    merchant?: { id: number; name: string };
 };
 
 interface Props {
@@ -25,13 +27,11 @@ export default function ProductList({ products }: Props) {
 
     function onConfirmDelete() {
         if (deleteId) {
-            router.delete(`/products/${deleteId}`);
+            router.delete(productsRoute.destroy(deleteId).url);
             setShowConfirm(false);
             setDeleteId(null);
         }
     }
-
-    console.log(productsRoute.create().url)
 
     return (
         <AppLayout breadcrumbs={[]}> 
@@ -65,9 +65,9 @@ export default function ProductList({ products }: Props) {
                         { label: 'ID', key: 'id' },
                         { label: 'Name', key: 'name' },
                         { label: 'Description', key: 'description' },
-                        { label: 'Display Image', key: 'display_image' },
-                        { label: 'Price', key: 'price' },
+                        { label: 'Price', key: 'formatted_price' },
                         { label: 'Category', key: 'category' },
+                        { label: 'Enabled', key: 'enabled' },
                         {
                             label: 'Actions',
                             key: 'actions',

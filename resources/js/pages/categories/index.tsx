@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import MinimalTable from '@/components/minimal-table';
 import AppLayout from '@/layouts/app-layout';
 import type { BreadcrumbItem } from '@/types';
-import categoriesRoute, { edit } from '@/routes/categories';
+import categoriesRoute, { edit } from '@/routes/admin/categories';
 import { DeleteIcon, Trash2 } from 'lucide-react';
 import { useForm, router } from '@inertiajs/react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';

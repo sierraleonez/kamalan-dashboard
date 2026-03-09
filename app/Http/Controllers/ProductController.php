@@ -10,7 +10,7 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = Product::with('category')->get();
+        $products = Product::with(['category', 'merchant'])->get();
         return inertia('products/index', [
             'products' => $products,
         ]);
@@ -20,8 +20,10 @@ class ProductController extends Controller
     public function create()
     {
         $categories = \App\Models\Category::all();
+        $merchants = \App\Models\Merchant::all();
         return inertia('products/create', [
             'categories' => $categories,
+            'merchants' => $merchants,
         ]);
     }
 
@@ -35,6 +37,7 @@ class ProductController extends Controller
             'enabled' => 'boolean',
             'price' => 'required|integer',
             'category_id' => 'required|exists:categories,id',
+            'merchant_id' => 'required|exists:merchants,id',
         ]);
         $validated['created_by'] = $request->user()->id;
         $product = Product::create($validated);
@@ -44,7 +47,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        $product->load('category');
+        $product->load(['category', 'merchant']);
         return inertia('products/show', [
             'product' => $product,
         ]);
@@ -54,9 +57,11 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = \App\Models\Category::all();
+        $merchants = \App\Models\Merchant::all();
         return inertia('products/edit', [
             'product' => $product,
             'categories' => $categories,
+            'merchants' => $merchants,
         ]);
     }
 
@@ -70,6 +75,7 @@ class ProductController extends Controller
             'enabled' => 'boolean',
             'price' => 'required|integer',
             'category_id' => 'required|exists:categories,id',
+            'merchant_id' => 'required|exists:merchants,id',
         ]);
         $product->update($validated);
         return redirect()->route('products.index');

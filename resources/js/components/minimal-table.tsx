@@ -50,7 +50,7 @@ export function MinimalTable({ columns, data, className, redirectUrlFn }: Minima
                   <TableCell key={col.key} className={cn('px-4 py-2', col.className)}>
                     {col.renderItem
                       ? col.renderItem(item, item[col.key])
-                      : item[col.key] ?? ''}
+                      : renderBasedOnType(item[col.key])}
                   </TableCell>
                 ))}
               </TableRow>
@@ -63,3 +63,10 @@ export function MinimalTable({ columns, data, className, redirectUrlFn }: Minima
 }
 
 export default MinimalTable;
+
+function renderBasedOnType(value: any) {
+  if (typeof value === 'boolean') {
+    return value ? 'Yes' : 'No';
+  }
+  return String(value);
+}

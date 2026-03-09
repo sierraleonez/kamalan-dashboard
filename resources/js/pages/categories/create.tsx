@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
 import { useForm } from '@inertiajs/react';
+import categories from '@/routes/admin/categories';
 
 interface Props {
     errors?: Record<string, string[]>;
@@ -25,7 +26,7 @@ export default function CategoryCreate({ errors = {} }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/categories');
+        post(categories.store().url);
     };
 
     return (

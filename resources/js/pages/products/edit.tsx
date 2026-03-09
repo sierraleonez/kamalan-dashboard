@@ -6,8 +6,16 @@ import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
 import { useForm } from '@inertiajs/react';
 import Switch from '@/components/ui/switch';
+import products from '@/routes/admin/products';
+import { formatRupiah } from '@/lib/currency';
+import Dropdown from '@/components/ui/dropdown';
 
 interface Category {
+    id: number;
+    name: string;
+}
+
+interface Merchant {
     id: number;
     name: string;
 }
@@ -20,16 +28,18 @@ interface Product {
     price: number;
     description?: string;
     category_id: number;
+    merchant_id: number;
     enabled: boolean;
 }
 
 interface Props {
     product: Product;
     categories: Category[];
+    merchants: Merchant[];
     errors?: Record<string, string[]>;
 }
 
-export default function ProductEdit({ product, categories, errors = {} }: Props) {
+export default function ProductEdit({ product, categories, merchants, errors = {} }: Props) {
     const { data, setData, put, processing } = useForm({
         name: product.name,
         affiliate_link: product.affiliate_link || '',
@@ -37,6 +47,7 @@ export default function ProductEdit({ product, categories, errors = {} }: Props)
         price: product.price.toString(),
         description: product.description || '',
         category_id: product.category_id.toString(),
+        merchant_id: product.merchant_id.toString(),
         enabled: product.enabled ?? true,
     });
 
@@ -50,7 +61,7 @@ export default function ProductEdit({ product, categories, errors = {} }: Props)
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(`/products/${product.id}`);
+        put(products.update(product.id).url);
     };
 
     return (
@@ -85,19 +96,51 @@ export default function ProductEdit({ product, categories, errors = {} }: Props)
                     )}
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="price">Price</Label>
-                    <Input id="price" name="price" type="number" value={data.price} onChange={handleChange} required placeholder="Price" />
+                    <Label htmlFor="price">Price (IDR)</Label>
+                              <Input
+                                id="price"
+                                name="price"
+                                type="text"
+                                inputMode="numeric"
+                                value={data.price ? formatRupiah(data.price) : ''}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                  const raw = e.target.value.replace(/\D/g, '');
+                                  setData('price', raw);
+                                }}
+                                required
+                                placeholder="Enter price in Rupiah (e.g., 250000)"
+                              />
                     <InputError message={errors.price?.[0]} />
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="category_id">Category</Label>
-                    <select id="category_id" name="category_id" value={data.category_id} onChange={handleChange} required className="input">
-                        <option value="">Select Category</option>
-                        {categories.map((cat) => (
-                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                        ))}
-                    </select>
+                    <Dropdown
+                        items={categories}
+                        value={data.category_id}
+                        id='category_id'
+                        name='category_id'
+                        onChange={handleChange}
+                        placeholder="Select Category"
+                    />
                     <InputError message={errors.category_id?.[0]} />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="merchant_id">Merchant</Label>
+                    <Dropdown
+                        items={merchants}
+                        value={data.merchant_id}
+                        id='merchant_id'
+                        name='merchant_id'
+                        onChange={handleChange}
+                        placeholder="Select Merchant"
+                    />
+                    {/* <select id="merchant_id" name="merchant_id" value={data.merchant_id} onChange={handleChange} required className="input">
+                        <option value="">Select Merchant</option>
+                        {merchants.map((merchant) => (
+                            <option key={merchant.id} value={merchant.id}>{merchant.name}</option>
+                        ))}
+                    </select> */}
+                    <InputError message={errors.merchant_id?.[0]} />
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="enabled">Enabled</Label>
