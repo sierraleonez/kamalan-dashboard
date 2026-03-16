@@ -14,7 +14,7 @@ class RegistryDeliveryInfoController extends Controller
             'registry_id' => 'required|exists:registry,id',
             'photo_url' => 'nullable|string|max:255',
             'greeting' => 'required|string|max:1000',
-            'receiver_name' => 'required|string|max:255',
+        'receiver_name' => 'required|string|max:255',
             'phone_number' => 'required|string|max:20',
             'province' => 'required|string|max:255',
             'city' => 'required|string|max:255',

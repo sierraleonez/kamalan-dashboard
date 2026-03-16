@@ -2,6 +2,8 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Calendar, Heart } from 'lucide-react';
 import { ShareRegistryResponse } from '@/types/response';
+import { router } from '@inertiajs/react';
+import products from '@/routes/products';
 
 interface WishListItem {
     id: number;
@@ -26,14 +28,11 @@ interface RegistryCardProps {
 }
 
 export default function RegistryCard({ registryData, isMobile = false }: RegistryCardProps) {
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-        }).format(price);
-    };
-
+    function openProductDetail(productId: number) {
+        const params = { query: { registry_id: registryData.id } };
+        const url = products.show(productId, params).url;
+        window.open(url, '_blank');
+    }
     if (isMobile) {
         return (
             <div className="max-w-sm mx-auto">
@@ -74,7 +73,11 @@ export default function RegistryCard({ registryData, isMobile = false }: Registr
                             
                             <div className="space-y-2">
                                 {registryData.products.map((item, index) => (
-                                    <div key={item.id} className="flex items-center gap-2 p-2 bg-[--secondary] rounded-lg">
+                                    <div 
+                                        key={item.id} 
+                                        onClick={() => openProductDetail(item.id)}
+                                        className="flex items-center gap-2 p-2 bg-[--secondary] rounded-lg cursor-pointer hover:bg-[--secondary]/80 transition-colors"
+                                    >
                                         <div className="flex-shrink-0 w-6 h-6 bg-[--primary] text-[--primary-foreground] rounded-full flex items-center justify-center text-xs font-semibold">
                                             {index + 1}
                                         </div>
@@ -85,7 +88,7 @@ export default function RegistryCard({ registryData, isMobile = false }: Registr
                                         />
                                         <div className="flex-grow min-w-0">
                                             <h4 className="text-xs font-medium text-[--foreground] truncate">
-                                                {item.name}
+                                                {item.name} x{item.pivot.quantity}
                                             </h4>
                                             <p className="text-xs text-[--primary] font-semibold">
                                                 {item.formatted_price}
@@ -134,14 +137,18 @@ export default function RegistryCard({ registryData, isMobile = false }: Registr
                     
                     {/* Wish List */}
                     <div className="space-y-3">
-                        <h3 className="text-lg font-serif text-[--foreground] flex items-center gap-2">
+                        <h3 className="text-lg font-serif text-[--foreground] flex items-center justify-center gap-2">
                             <Heart className="w-5 h-5 text-[--primary]" />
                             Wish List
                         </h3>
                         
                         <div className="space-y-2">
                             {registryData.products.map((item, index) => (
-                                <div key={item.id} className="flex items-center gap-3 p-3 bg-[--secondary] rounded-lg">
+                                <div 
+                                    key={item.id} 
+                                    onClick={() => openProductDetail(item.id)}
+                                    className="flex items-center gap-3 py-3 bg-[--secondary] rounded-lg cursor-pointer hover:bg-[--secondary]/80 transition-colors"
+                                >
                                     <div className="flex-shrink-0 w-8 h-8 bg-[--primary] text-[--primary-foreground] rounded-full flex items-center justify-center text-sm font-semibold">
                                         {index + 1}
                                     </div>
@@ -151,11 +158,17 @@ export default function RegistryCard({ registryData, isMobile = false }: Registr
                                         className="w-12 h-12 object-cover rounded"
                                     />
                                     <div className="flex-grow min-w-0">
-                                        <h4 className="text-sm font-medium text-[--foreground] truncate">
-                                            {item.name}
-                                        </h4>
+                                        <div className="flex justify-between">
+                                            <h4 className="text-sm font-medium text-[--foreground] truncate">
+                                                {item.name}
+                                            </h4>
+                                            <h4 className="text-sm font-medium text-[--foreground] truncate">
+                                                {item.formatted_price}
+                                                
+                                            </h4>
+                                        </div>
                                         <p className="text-xs text-[--primary] font-semibold">
-                                            {item.formatted_price}
+                                            x{item.pivot.quantity}
                                         </p>
                                     </div>
                                 </div>

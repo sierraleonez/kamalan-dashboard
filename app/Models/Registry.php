@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 
 class Registry extends Model
 {
@@ -81,7 +82,7 @@ class Registry extends Model
     public static function generateMagicLink(): string
     {
         do {
-            $link = \Str::random(32);
+            $link = Str::random(32);
         } while (static::where('magic_link', $link)->exists());
 
         return $link;
@@ -101,5 +102,20 @@ class Registry extends Model
     public function getFormattedDateAttribute(): string
     {
         return $this->date ? $this->date->format('d F Y') : '';
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($registry) {
+            $category = $registry->category;
+            $categoryName = $category ? $category->name : 'unknown';
+
+            $suffix = Str::lower(Str::random(6));
+            $slugName = Str::slug($registry->name);
+            $slugCategory = Str::slug($categoryName);
+            $date = $registry->date->format('Y-m-d');
+
+            $registry->magic_link = "{$slugName}-$slugCategory-$date-$suffix";
+        });
     }
 }

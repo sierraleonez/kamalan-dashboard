@@ -23,7 +23,7 @@ class ProductFactory extends Factory
             'affiliate_link' => fake()->url(),
             'enabled' => fake()->boolean(80), // 80% chance of being enabled
             'price' => fake()->numberBetween(10000, 1000000), // Price in IDR
-            'category_id' => 2,
+            'category_id' => 3,
             'merchant_id' => 2,
             'created_by' => 1,
         ];

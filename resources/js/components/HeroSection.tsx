@@ -38,7 +38,7 @@ export default function HeroSection({ onClickCreateRegistry }: HeroSectionProps)
             {/* Hero Image */}
             <div className="relative h-[60vh] md:h-[70vh] overflow-hidden">
                 <img
-                    src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1600&h=1000&fit=crop"
+                    src="/images/gift-giving.jpg"
                     alt="Artisanal gift collection"
                     className="w-full h-full object-cover"
                 />

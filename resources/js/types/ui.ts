@@ -12,3 +12,5 @@ export type AuthLayoutProps = {
     title?: string;
     description?: string;
 };
+
+export type ViewMode = 'store' | 'select-gift' | 'share-registry';

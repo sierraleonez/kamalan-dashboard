@@ -25,14 +25,17 @@ export default function RegistryFormModal({ isOpen, onClose, categoryId, onSucce
     const today = new Date();
     const nextDay = new Date(today);
     nextDay.setDate(today.getDate() + 1);
-    console.log(data.category_id)
+
     useEffect(() => {
         setData('category_id', categoryId);
     }, [categoryId]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(storeRegistry.url())
+
+        post(storeRegistry.url(), {
+            
+        })
         
         // router.visit(selectGifts.url())
         // post('/registry/create', {
@@ -95,7 +98,11 @@ export default function RegistryFormModal({ isOpen, onClose, categoryId, onSucce
                             min={nextDay.toISOString().split('T')[0]} // Set minimum date to today
                             id="date"
                             value={data.date}
-                            onChange={(e) => setData('date', e.target.value)}
+                            onChange={(e) => {
+                                const date = new Date(e.target.value).toISOString();
+                                const formattedDate = date.split('T')[0];
+                                setData('date', formattedDate)
+                            }}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#889966] focus:border-transparent"
                             required
                         />

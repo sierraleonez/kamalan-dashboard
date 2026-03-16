@@ -40,14 +40,14 @@ export default function Landing() {
                     onClickCreateRegistry={handleCreateRegistry}
                 />
                 
-                <FeaturedBanner 
+                {/* <FeaturedBanner 
                     title="Baby Shower Collection"
                     subtitle="Bulan Ini di Kamalan"
                     image="https://images.unsplash.com/photo-1544427920-c49ccfb85579?w=1600&h=600&fit=crop"
                     ctaText="Lihat Koleksi"
                 />
                 
-                <ArticleGrid />
+                <ArticleGrid /> */}
                 
                 <BrandWall />
             </main>

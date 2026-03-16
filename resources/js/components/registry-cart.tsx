@@ -28,7 +28,6 @@ export default function RegistryCart({
     onRemoveItem,
     onContinue
 }: RegistryCartProps) {
-    console.log(items.length === 0)
     const [isOpen, setIsOpen] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
@@ -69,14 +68,13 @@ export default function RegistryCart({
 
     const CartContent = () => (
         <div className="flex flex-col h-full">
-            {/* Registry Title - Centered */}
 
             {/* Cart Container with Light Green Border */}
             {/* <div className="flex-1 border border-primary/30 rounded-lg bg-background p-4"> */}
             {/* Cart Items */}
             <div className="space-y-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]  overflow-y-auto mb-6 flex-1 min-h-0 pr-2">
                 {items.length === 0 ? (
-                    <div className="text-center text-gray-500 py-8">
+                    <div className="flex items-center justify-center text-center text-gray-500 min-h-[200px]">
                         <p className="font-inter">Tidak ada item di registry</p>
                     </div>
                 ) : (
@@ -201,7 +199,7 @@ export default function RegistryCart({
                                     {/* Cart Items */}
                                     <div className="space-y-4 mb-6 flex-1 min-h-0 pr-2 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                                         {items.length === 0 ? (
-                                            <div className="text-center text-gray-500 py-8">
+                                            <div className="flex items-center justify-center text-center text-gray-500 min-h-[200px]">
                                                 <p className="font-inter">Tidak ada item di registry</p>
                                             </div>
                                         ) : (

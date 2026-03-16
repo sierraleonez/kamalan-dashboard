@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Registry;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -42,7 +43,14 @@ class ClientController extends Controller
             ->findOrFail($id);
 
         $registryId = $request->query('registry');
-        
+        $user = $request->user();
+        $user_id = $user->id;
+
+        Registry::query()
+            ->where('id', $registryId)
+            ->where('user_id', $user_id)
+            ->firstOrFail();
+
         // Load existing cart items for this registry
         $cartItems = [];
         if ($registryId) {
@@ -60,7 +68,7 @@ class ClientController extends Controller
                 });
         }
 
-        return inertia('client/create-registry/show-product', [
+        return inertia('client/registry/create/show-product', [
             'product' => $product,
             'registryId' => $registryId,
             'initialCartItems' => $cartItems,
@@ -91,9 +99,10 @@ class ClientController extends Controller
         //
     }
 
-    public function showProduct(Request $request) {
+    public function showProduct(Request $request)
+    {
         $registryId = $request->query('registry');
-        
+
         // Load existing cart items for this registry
         $cartItems = [];
         if ($registryId) {
@@ -111,8 +120,8 @@ class ClientController extends Controller
                 });
         }
 
-        return inertia('client/create-registry/select-gift', [
-            'products' => Inertia::scroll(fn () => Product::where('enabled', true)->paginate(15)),
+        return inertia('client/registry/create/select-gift', [
+            'products' => Inertia::scroll(fn() => Product::where('enabled', true)->paginate(15)),
             'registryId' => $registryId,
             'initialCartItems' => $cartItems,
         ]);

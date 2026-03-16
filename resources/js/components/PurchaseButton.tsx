@@ -1,5 +1,6 @@
 import React from 'react';
 import { ExternalLink, ShoppingBag, Check } from 'lucide-react';
+import { ViewMode } from '@/types';
 
 interface PurchaseButtonProps {
     affiliate_link?: string;
@@ -7,9 +8,11 @@ interface PurchaseButtonProps {
     onAddToCart?: () => void;
     productId?: number;
     isInCart?: boolean;
+    viewMode?: ViewMode;
+    receiverName?: string;
 }
 
-export default function PurchaseButton({ affiliate_link, productName, onAddToCart, productId, isInCart }: PurchaseButtonProps) {
+export default function PurchaseButton({ affiliate_link, productName, onAddToCart, productId, isInCart, viewMode, receiverName }: PurchaseButtonProps) {
     const handlePurchaseClick = () => {
         if (onAddToCart) {
             onAddToCart();
@@ -20,6 +23,7 @@ export default function PurchaseButton({ affiliate_link, productName, onAddToCar
             console.log(`Purchase clicked for: ${productName}`);
         }
     };
+    const buttonLabel = determineLabel(viewMode, isInCart, receiverName);
 
     return (
         <div className="space-y-4 border-t border-[oklch(0.922_0_0)] pt-6">
@@ -32,11 +36,23 @@ export default function PurchaseButton({ affiliate_link, productName, onAddToCar
                 }`}
             >
                 {isInCart && <Check className="w-5 h-5" />}
-                <span className="text-lg">
-                    {isInCart ? 'Sudah di Registry' : 'Tambahkan ke Registry'}
+                <span className="text-lg text-white">
+                    {buttonLabel}
                 </span>
             </button>
             
         </div>
     );
+}
+
+function determineLabel(viewMode: ViewMode | undefined, isInCart: boolean | undefined, receiverName?: string): string {
+    switch(viewMode) {
+        case 'select-gift':
+            return isInCart ? 'Sudah di Registry' : 'Tambahkan ke Registry';
+        case 'share-registry':
+            return `Belikan untuk ${receiverName || '...'}`;
+
+        default:
+            return 'Beli Sekarang';
+    }
 }

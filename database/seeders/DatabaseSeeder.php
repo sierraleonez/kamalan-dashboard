@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
             MerchantSeeder::class,
+            CategorySeeder::class
         ]);
         
         // Create 50 products

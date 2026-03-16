@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('registry', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->dateTime('date');
+            $table->date('date');
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('magic_link')->unique();

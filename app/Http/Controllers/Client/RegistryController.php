@@ -25,7 +25,7 @@ class RegistryController extends Controller
         'date' => $validated['date'],
         'category_id' => $validated['category_id'],
         'user_id' => $userId,
-        'magic_link' => Registry::generateMagicLink(),
+        // 'magic_link' => Registry::generateMagicLink(),
         'last_step' => 1, // Initial step
     ]);
 

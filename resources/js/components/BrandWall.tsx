@@ -12,12 +12,13 @@ interface BrandWallProps {
 
 export default function BrandWall({ brands }: BrandWallProps) {
     const defaultBrands: Brand[] = [
-        { name: "Tokopedia", logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=80&fit=crop" },
-        { name: "Shopee", logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=80&fit=crop" },
-        { name: "Blibli", logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=80&fit=crop" },
-        { name: "Lazada", logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=80&fit=crop" },
-        { name: "Bukalapak", logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=80&fit=crop" },
-        { name: "Zalora", logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=80&fit=crop" }
+        { name: "Mooimon Indonesia", logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=80&fit=crop" },
+        { name: "Natural Moms", logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=80&fit=crop" },
+        { name: "Cocolatte Indonesia", logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=80&fit=crop" },
+        { name: "Baby Safe Indonesia", logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=80&fit=crop" },
+        { name: "Sugar Baby", logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=80&fit=crop" },
+        { name: "Boonaboo Indonesia", logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=80&fit=crop" },
+        { name: "Fox and Bunny", logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=200&h=80&fit=crop" }
     ];
 
     const brandsToShow = brands || defaultBrands;

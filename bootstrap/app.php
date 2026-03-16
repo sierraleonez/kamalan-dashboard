@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureRegistryOwnership;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use Fruitcake\Cors\CorsService;
@@ -25,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'registry.owner' => EnsureRegistryOwnership::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
