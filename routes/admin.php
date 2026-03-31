@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\MerchantController;
+use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\FeaturedMerchantController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +28,26 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
     Route::resource('merchants', MerchantController::class);
+    Route::resource('events', EventController::class);
+    Route::resource('featured-merchants', FeaturedMerchantController::class);
+
+    // Admin upload image
+    Route::post('upload-image', function (\Illuminate\Http\Request $request) {
+        $request->validate([
+            'image' => ['required', 'image', 'max:2048'], // 2MB max
+        ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('images', 'public');
+
+            $url = \Illuminate\Support\Facades\Storage::url($path);
+            return redirect()->back()->with(['image_url' => $url]);
+        }
+
+        return redirect()->back()->withErrors([
+            'image' => 'No file was uploaded.',
+        ]);
+    })->middleware(['throttle:10,1'])->name('upload-image');
 });
 
 // Admin guest routes (with custom redirect for authenticated users)

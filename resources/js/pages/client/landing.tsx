@@ -7,26 +7,31 @@ import ArticleGrid from '@/components/ArticleGrid';
 import BrandWall from '@/components/BrandWall';
 import Footer from '@/components/Footer';
 import AuthModal from '@/components/AuthModal';
+import ProductSlider from '@/components/product-slider';
 import createRegistry from '@/routes/create-registry';
+import products from '@/routes/products';
 
 export default function Landing() {
-    const { auth } = usePage().props as any;
+    const { auth, products: productList, merchants } = usePage().props as any;
     const [showAuthModal, setShowAuthModal] = useState(false);
 
     function handleCreateRegistry() {
-        // Check if user is authenticated
+        // Redirect to select gifts page (first step is now select gifts, not select event)
+        // router.visit(createRegistry.selectGifts.url());
         if (auth?.user) {
-            // User is logged in, redirect to create registry page
-            router.visit(createRegistry.selectEvent.url());
+            router.visit(createRegistry.selectGifts.url());
         } else {
-            // User is not logged in, show auth modal
             setShowAuthModal(true);
         }
     }
 
     function handleAuthSuccess() {
-        // After successful login/register, redirect to create registry
-        router.visit(createRegistry.selectEvent.url());
+        // After successful login/register, redirect to select gifts page
+        router.visit(createRegistry.selectGifts.url());
+    }
+
+    function handleViewAllProducts() {
+        router.visit(products.index.url());
     }
 
     return (
@@ -40,6 +45,11 @@ export default function Landing() {
                     onClickCreateRegistry={handleCreateRegistry}
                 />
                 
+                <ProductSlider 
+                    products={productList}
+                    onViewAll={handleViewAllProducts}
+                />
+                
                 {/* <FeaturedBanner 
                     title="Baby Shower Collection"
                     subtitle="Bulan Ini di Kamalan"
@@ -49,7 +59,7 @@ export default function Landing() {
                 
                 <ArticleGrid /> */}
                 
-                <BrandWall />
+                <BrandWall merchants={merchants} />
             </main>
             
             <Footer />

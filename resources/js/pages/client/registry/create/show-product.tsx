@@ -4,21 +4,27 @@ import Navbar from '@/components/Navbar';
 import RegistryCart from '@/components/registry-cart';
 import ProductDetailLayout, { ProductDetailData } from '@/components/layout/product-detail';
 import { useRegistryCartHook, CartItem } from '@/hooks/registry/use-registry-cart-hook';
+import { cp } from 'fs';
+import { InertiaPageProps } from '@/types/ui';
 
-interface ShowProductProps {
+
+interface ShowProductProps extends InertiaPageProps {
     product: ProductDetailData;
     registryId?: number;
     initialCartItems?: CartItem[];
 }
 
-export default function ShowProduct({ product, registryId, initialCartItems = [] }: ShowProductProps) {
+export default function ShowProduct(props: ShowProductProps) {
+    const { product, registryId, initialCartItems = [], auth } = props;
+    
+    console.log('Registry ID in ShowProduct:', props);
     const {
         cartItems,
         addToCart,
         updateCartQuantity,
         removeFromCart,
         handleContinue
-    } = useRegistryCartHook({ registryId, initialCartItems });
+    } = useRegistryCartHook({ registryId, initialCartItems, user: auth?.user });
 
     const viewMode = 'select-gift'; // This can be dynamic based on the page context  
     const handleAddToCart = () => {

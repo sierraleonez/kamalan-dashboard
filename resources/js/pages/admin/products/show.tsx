@@ -7,6 +7,11 @@ interface Category {
     name: string;
 }
 
+interface Event {
+    id: number;
+    name: string;
+}
+
 interface Merchant {
     id: number;
     name: string;
@@ -18,7 +23,8 @@ interface Product {
     description?: string;
     display_image?: string;
     price: number;
-    category?: Category;
+    event?: Event;
+    categories?: Category[];
     merchant?: Merchant;
 }
 
@@ -43,7 +49,10 @@ export default function ProductShow({ product }: Props) {
                     <span className="font-semibold">Price:</span> {product.price}
                 </div>
                 <div className="mb-2">
-                    <span className="font-semibold">Category:</span> {product.category?.name || '-'}
+                    <span className="font-semibold">Event:</span> {product.event?.name || '-'}
+                </div>
+                <div className="mb-2">
+                    <span className="font-semibold">Categories:</span> {product.categories && product.categories.length > 0 ? product.categories.map(c => c.name).join(', ') : '-'}
                 </div>
                 <div className="mb-2">
                     <span className="font-semibold">Merchant:</span> {product.merchant?.name || '-'}

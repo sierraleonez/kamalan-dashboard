@@ -7,7 +7,7 @@ export interface EventCategory {
 }
 
 export interface Registry {
-    category_id: number;
+    event_id: number;
     date: string;
     formatted_date: string;
     id: number;
@@ -19,11 +19,12 @@ export interface Registry {
 export interface Product {
     id: number;
     name: string;
-    category_id: number;
+    event_id: number;
     affiliate_link: string;
     display_image: string;
     enable: boolean;
     formatted_price: string;
+    categories?: Array<{id: number; name: string}>;
 }
 
 export interface GiftCart {
@@ -50,7 +51,7 @@ export interface DeliveryInfo {
 }
 
 export type ShareRegistryResponse = Registry & {
-    category: EventCategory;
+    event: EventCategory;
     products: Array<Product & { pivot: GiftCart }>;
     delivery_info: DeliveryInfo
 };

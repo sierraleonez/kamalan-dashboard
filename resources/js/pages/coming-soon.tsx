@@ -17,7 +17,7 @@ export default function ComingSoon() {
                         alt="Kamalan"
                         className="h-32 md:h-40 lg:h-48 w-auto"
                     />
-                    <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-foreground text-center px-4">
+                    <h1 className="text-primary font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-foreground text-center px-4">
                         Coming Soon
                     </h1>
                 </div>

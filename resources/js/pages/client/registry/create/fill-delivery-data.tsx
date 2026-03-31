@@ -25,11 +25,11 @@ interface FormData {
 
 interface iRegistry {
     id: number;
-    category_id: number;
+    event_id: number;
     date: string;
     name: string;
     user_id: number;
-    category: {
+    event: {
         id: number;
         name: string;
         background_image: string;
@@ -53,7 +53,7 @@ export default function RegistryFormData(xprops: PageProps) {
         photo_url: null,
         registry_title: registryDetail ? registryDetail.name : '',
         greeting: '',
-        event_name: registryDetail ? registryDetail.category.name : '',
+        event_name: registryDetail ? registryDetail.event.name : '',
         event_date: registryDetail ? registryDetail.date : '',
         receiver_name: '',
         phone_number: '',
@@ -156,7 +156,7 @@ export default function RegistryFormData(xprops: PageProps) {
                                 </label>
                                 <input
                                     type="text"
-                                    disabled
+                                    // disabled
                                     id="registry-title"
                                     value={data.registry_title}
                                     onChange={(e) => setData('registry_title', e.target.value)}
@@ -199,7 +199,7 @@ export default function RegistryFormData(xprops: PageProps) {
                                 </label>
                                 <input
                                     type="text"
-                                    disabled
+                                    // disabled
                                     id="event-name"
                                     value={data.event_name}
                                     onChange={(e) => setData('event_name', e.target.value)}
@@ -221,7 +221,7 @@ export default function RegistryFormData(xprops: PageProps) {
                                 <input
                                     type="date"
                                     id="event-date"
-                                    disabled
+                                    // disabled
                                     value={new Date(data.event_date).toISOString().split('T')[0]} // Format date for input
                                     onChange={(e) => setData('event_date', e.target.value)}
                                     className="w-full px-3 py-2 border border-[oklch(0.922_0_0)] rounded-md focus:outline-none focus:ring-2 focus:ring-[#889966] focus:border-transparent"

@@ -1,4 +1,6 @@
 import React from 'react';
+import { ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import ProductImage from '@/components/ProductImage';
 import ProductHeader from '@/components/ProductHeader';
 import ProductDescription from '@/components/ProductDescription';
@@ -55,6 +57,16 @@ export default function ProductDetailLayout({
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                 {/* Left Column - Product Image */}
                 <div className="order-1">
+                    {/* Back Button */}
+                    <Button
+                        variant="ghost"
+                        onClick={() => window.history.back()}
+                        className="mb-4 -ml-2 hover:bg-gray-100"
+                    >
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Kembali
+                    </Button>
+                    
                     <ProductImage 
                         src={product.display_image} 
                         alt={product.name} 

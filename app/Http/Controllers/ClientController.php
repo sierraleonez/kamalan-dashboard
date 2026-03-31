@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Merchant;
+use App\Models\FeaturedMerchant;
 use App\Models\Registry;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,7 +16,27 @@ class ClientController extends Controller
      */
     public function index()
     {
-        return inertia('client/landing');
+        // Get 6 featured products for preview
+        $products = Product::with(['categories', 'merchant'])
+            ->where('enabled', true)
+            ->take(6)
+            ->get();
+
+        // Get featured merchants ordered by priority
+        $merchants = Merchant::whereHas('featuredMerchant')
+            ->with(['featuredMerchant' => function($query) {
+                $query->orderBy('priority', 'desc');
+            }])
+            ->get()
+            ->sortByDesc(function($merchant) {
+                return $merchant->featuredMerchant->priority ?? 0;
+            })
+            ->values();
+
+        return inertia('client/landing', [
+            'products' => $products,
+            'merchants' => $merchants,
+        ]);
     }
 
     /**
@@ -44,16 +66,18 @@ class ClientController extends Controller
 
         $registryId = $request->query('registry');
         $user = $request->user();
-        $user_id = $user->id;
 
-        Registry::query()
-            ->where('id', $registryId)
-            ->where('user_id', $user_id)
-            ->firstOrFail();
+        // Only validate registry ownership if user is authenticated and registry is provided
+        if ($user && $registryId) {
+            Registry::query()
+                ->where('id', $registryId)
+                ->where('user_id', $user->id)
+                ->firstOrFail();
+        }
 
-        // Load existing cart items for this registry
+        // Load existing cart items for this registry (only if user is authenticated)
         $cartItems = [];
-        if ($registryId) {
+        if ($user && $registryId) {
             $cartItems = \App\Models\RegistryGiftCart::where('registry_id', $registryId)
                 ->with('product')
                 ->get()
@@ -101,11 +125,13 @@ class ClientController extends Controller
 
     public function showProduct(Request $request)
     {
+        $user = $request->user();
         $registryId = $request->query('registry');
 
-        // Load existing cart items for this registry
+        // Load existing cart items for this registry (only if user is authenticated)
         $cartItems = [];
-        if ($registryId) {
+
+        if ($user && $registryId) {
             $cartItems = \App\Models\RegistryGiftCart::where('registry_id', $registryId)
                 ->with('product')
                 ->get()

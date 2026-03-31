@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
 import { useForm, router, usePage } from '@inertiajs/react';
 import categories from '@/routes/admin/categories';
-import { uploadFile } from '@/routes';
+import admin from '@/routes/admin';
 import { Upload } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -51,8 +51,8 @@ export default function CategoryEdit({ category, errors = {} }: Props) {
             reader.readAsDataURL(file);
 
             const formData = new FormData();
-            formData.append('registry_background_image', file);
-            router.post(uploadFile.url(), formData, {
+            formData.append('image', file);
+            router.post(admin.uploadImage.url(), formData, {
                 onSuccess: (response) => {
                     console.log('Image uploaded successfully:', response);
                 }

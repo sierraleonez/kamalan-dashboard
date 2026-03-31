@@ -12,23 +12,23 @@ import { selectGifts, storeRegistry } from '@/routes/create-registry';
 interface RegistryFormModalProps {
     isOpen: boolean;
     onClose: () => void;
-    categoryId: string;
+    eventId: string;
     onSuccess?: (data: any) => void;
 }
 
-export default function RegistryFormModal({ isOpen, onClose, categoryId, onSuccess }: RegistryFormModalProps) {
+export default function RegistryFormModal({ isOpen, onClose, eventId, onSuccess }: RegistryFormModalProps) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         date: '',
-        category_id: categoryId,
+        event_id: eventId,
     });
     const today = new Date();
     const nextDay = new Date(today);
     nextDay.setDate(today.getDate() + 1);
 
     useEffect(() => {
-        setData('category_id', categoryId);
-    }, [categoryId]);
+        setData('event_id', eventId);
+    }, [eventId]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

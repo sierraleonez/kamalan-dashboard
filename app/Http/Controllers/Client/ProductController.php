@@ -34,7 +34,7 @@ class ProductController extends Controller
             $registry = Registry::with(['deliveryInfo', 'products'])->find($registry_id);
         }
         
-        $product->load(['category', 'merchant']);
+        $product->load(['event', 'categories', 'merchant']);
         return Inertia::render('client/product/show', [
             'product' => $product,
             'registry' => $registry

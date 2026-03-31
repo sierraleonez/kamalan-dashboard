@@ -18,6 +18,8 @@ import AppLogo from './app-logo';
 import categories from '@/routes/admin/categories';
 import products from '@/routes/admin/products';
 import merchants from '@/routes/admin/merchants';
+import events from '@/routes/admin/events';
+import featuredMerchants from '@/routes/admin/featured-merchants';
 
 const mainNavItems: NavItem[] = [
     {
@@ -31,6 +33,11 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
+        title: 'Events',
+        href: events.index(),
+        icon: LayoutGrid,
+    },
+    {
         title: 'Products',
         href: products.index(),
         icon: LayoutGrid,
@@ -40,6 +47,11 @@ const mainNavItems: NavItem[] = [
         href: merchants.index(),
         icon: LayoutGrid,
     },
+    {
+        title: 'Featured Merchants',
+        href: featuredMerchants.index(),
+        icon: LayoutGrid,
+    }
 ];
 
 const footerNavItems: NavItem[] = [

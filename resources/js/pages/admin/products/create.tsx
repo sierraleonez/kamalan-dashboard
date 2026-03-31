@@ -10,11 +10,17 @@ import Switch from '@/components/ui/switch';
 import products from '@/routes/admin/products';
 import { formatRupiah } from '@/lib/currency';
 import Dropdown from '@/components/ui/dropdown';
-import { uploadFile } from '@/routes';
+import admin from '@/routes/admin';
 import { Upload } from 'lucide-react';
+import { MultiSelect } from '@/components/ui/multi-select';
 
 
 interface Category {
+  id: number;
+  name: string;
+}
+
+interface Event {
   id: number;
   name: string;
 }
@@ -25,12 +31,13 @@ interface Merchant {
 }
 
 interface Props {
+  events: Event[];
   categories: Category[];
   merchants: Merchant[];
   errors?: Record<string, string[]>;
 }
 
-export default function ProductCreate({ categories, merchants, errors = {} }: Props) {
+export default function ProductCreate({ events, categories, merchants, errors = {} }: Props) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const props = usePage().props;
   
@@ -39,7 +46,8 @@ export default function ProductCreate({ categories, merchants, errors = {} }: Pr
     description: '',
     display_image: '',
     affiliate_link: '',
-    category_id: '',
+    event_id: '',
+    category_ids: [] as number[],
     merchant_id: '',
     price: '',
     enabled: true,
@@ -61,8 +69,8 @@ export default function ProductCreate({ categories, merchants, errors = {} }: Pr
       reader.readAsDataURL(file);
 
       const formData = new FormData();
-      formData.append('registry_background_image', file);
-      router.post(uploadFile.url(), formData, {
+      formData.append('image', file);
+      router.post(admin.uploadImage.url(), formData, {
         onSuccess: (response) => {
           console.log('Image uploaded successfully:', response);
         }
@@ -73,6 +81,10 @@ export default function ProductCreate({ categories, merchants, errors = {} }: Pr
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setData(name as keyof typeof data, value);
+  };
+
+  const handleCategoryChange = (selectedIds: number[]) => {
+    setData('category_ids', selectedIds);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -164,14 +176,25 @@ export default function ProductCreate({ categories, merchants, errors = {} }: Pr
           <InputError message={errors.price?.[0]} />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="category_id">Category</Label>
-          <select id="category_id" name="category_id" value={data.category_id} onChange={handleChange} required className="input rounded-md border border-gray-300 focus:outline-none focus:ring-2 px-3 py-1 shadow-xs text-base focus:ring-primary/50">
-            <option value="">Select Category</option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>{cat.name}</option>
+          <Label htmlFor="event_id">Event</Label>
+          <select id="event_id" name="event_id" value={data.event_id} onChange={handleChange} required className="input rounded-md border border-gray-300 focus:outline-none focus:ring-2 px-3 py-1 shadow-xs text-base focus:ring-primary/50">
+            <option value="">Select Event</option>
+            {events.map((event) => (
+              <option key={event.id} value={event.id}>{event.name}</option>
             ))}
           </select>
-          <InputError message={errors.category_id?.[0]} />
+          <InputError message={errors.event_id?.[0]} />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="category_ids">Categories</Label>
+          <MultiSelect
+            options={categories}
+            value={data.category_ids}
+            onChange={handleCategoryChange}
+            placeholder="Select categories..."
+          />
+          <p className="text-xs text-gray-500">Search and select multiple categories</p>
+          <InputError message={errors.category_ids?.[0]} />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="merchant_id">Merchant</Label>

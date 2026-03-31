@@ -13,6 +13,23 @@ class Merchant extends Model
         'name',
         'shopee_link',
         'tokped_link',
-        'shop_location'
+        'shop_location',
+        'merchant_icon_url'
     ];
+
+    /**
+     * Get the products for the merchant.
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    /**
+     * Get the featured merchant record for this merchant.
+     */
+    public function featuredMerchant()
+    {
+        return $this->hasOne(FeaturedMerchant::class);
+    }
 }

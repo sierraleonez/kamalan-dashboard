@@ -13,9 +13,10 @@ interface AuthModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSuccess?: () => void;
+    redirectTo?: string;
 }
 
-export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
+export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: AuthModalProps) {
     const [isLogin, setIsLogin] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
 
@@ -24,6 +25,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
         email: '',
         password: '',
         password_confirmation: '',
+        redirect_to: redirectTo || '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -45,7 +47,9 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
 
     const switchMode = () => {
         setIsLogin(!isLogin);
-        reset();
+        reset('name', 'email', 'password', 'password_confirmation');
+        // Keep redirect_to when switching modes
+        setData('redirect_to', redirectTo || '');
     };
 
     if (!isOpen) return null;

@@ -16,7 +16,7 @@ class Product extends Model
         'affiliate_link',
         'enabled',
         'price',
-        'category_id',
+        'event_id',
         'merchant_id',
         'created_by'
     ];
@@ -30,9 +30,21 @@ class Product extends Model
         'formatted_price'
     ];
 
-    public function category()
+    /**
+     * Get the event that the product belongs to.
+     */
+    public function event()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Event::class);
+    }
+
+    /**
+     * Get the categories that the product belongs to (many-to-many).
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'product_category')
+                    ->withTimestamps();
     }
 
     public function merchant()

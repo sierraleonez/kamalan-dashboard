@@ -4,19 +4,42 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\RegistryGiftCart;
+use App\Models\Registry;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class RegistryGiftCartController extends Controller
 {
     function addGiftToCart(Request $request) {
-        // 1. validate request
+        $user = $request->user();
+        
+        // 1. validate request - registry_id is optional now
         $validated = $request->validate([
             'product_id' => 'required|exists:products,id',
-            'registry_id' => 'required|exists:registry,id',
+            'registry_id' => 'nullable|exists:registry,id',
         ]);
 
-        // 2. Check if item already exists in cart
-        $existingItem = RegistryGiftCart::where('registry_id', $validated['registry_id'])
+        $registryId = $validated['registry_id'] ?? null;
+
+        // 2. Auto-create registry if not provided
+        if (!$registryId) {
+            // Get default event (event_id = 1)
+            $event = \App\Models\Event::find(1);
+            $eventName = $event ? $event->name : 'Event';
+            
+            // Create registry with default values
+            $registry = Registry::create([
+                'user_id' => $user->id,
+                'event_id' => 1,
+                'name' => $user->name . "'s " . $eventName,
+                'date' => now()->format('Y-m-d'),
+            ]);
+            
+            $registryId = $registry->id;
+        }
+
+        // 3. Check if item already exists in cart
+        $existingItem = RegistryGiftCart::where('registry_id', $registryId)
             ->where('product_id', $validated['product_id'])
             ->first();
 
@@ -27,13 +50,13 @@ class RegistryGiftCartController extends Controller
             // Create new cart item
             RegistryGiftCart::create([
                 'product_id' => $validated['product_id'],
-                'registry_id' => $validated['registry_id'],
+                'registry_id' => $registryId,
                 'quantity' => 1,
             ]);
         }
 
-        // 3. Get updated cart items with product details
-        $cartItems = RegistryGiftCart::where('registry_id', $validated['registry_id'])
+        // 4. Get updated cart items with product details
+        $cartItems = RegistryGiftCart::where('registry_id', $registryId)
             ->with('product')
             ->get()
             ->map(function ($item) {
@@ -46,9 +69,13 @@ class RegistryGiftCartController extends Controller
                 ];
             });
 
+        // return redirect('create-registry.select-gifts', [
+        //     'registry' => $registryId,
+        // ]);
         return back()->with([
             'success' => 'Gift added to cart successfully',
             'cartItems' => $cartItems,
+            'registryId' => $registryId, // Send back the registry ID for the frontend
         ]);
     }
 

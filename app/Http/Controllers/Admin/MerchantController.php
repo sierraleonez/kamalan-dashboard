@@ -34,6 +34,7 @@ class MerchantController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'merchant_icon_url' => 'required|string|max:255',
             'shopee_link' => 'nullable|url|max:255',
             'tokped_link' => 'nullable|url|max:255',
             'shop_location' => 'nullable|string|max:255',
@@ -70,6 +71,7 @@ class MerchantController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'merchant_icon_url' => 'required|string|max:255',
             'shopee_link' => 'nullable|url|max:255',
             'tokped_link' => 'nullable|url|max:255',
             'shop_location' => 'nullable|string|max:255',

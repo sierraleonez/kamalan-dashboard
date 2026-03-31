@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\Client\ProductController;
+use App\Http\Controllers\Client\MerchantController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\Client\RegistryController;
 use App\Http\Controllers\Client\RegistryGiftCartController;
 use App\Http\Controllers\Client\RegistryDeliveryInfoController;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\Registry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -19,41 +21,75 @@ Route::get('/coming-soon', function () {
     return Inertia::render('coming-soon');
 })->name('coming-soon');
 Route::resource('products', ProductController::class);
+
+// Merchant routes
+Route::get('/merchant/{merchant}', [MerchantController::class, 'show'])->name('merchant.show');
+
 // Route::get('/products', [ProductController::class, 'index'])->name('product-list');
 // Route::get('/products/{}', [ProductController::class, 'index'])->name('product-list');
+
 
 // Create registry route (protected)
 Route::middleware('auth')->group(function () {
     Route::prefix('create-registry')->name('create-registry.')->group(function () {
 
         Route::get('/select-event', function (Request $request) {
-            $categories = Category::all();
-            return inertia('client/registry/create/select-event', ['categories' => $categories]);
+            $events = \App\Models\Event::all();
+            return inertia('client/registry/create/select-event', ['events' => $events]);
         })->name('select-event');
+
+        Route::get('/select-gifts', [ClientController::class, 'showProduct'])
+            ->name('select-gifts');
+
+        Route::get('/select-gifts/{product_id}', function (Request $request) {
+            $product_id = $request->product_id;
+
+            $product = Product::with(['event', 'categories', 'merchant', 'createdBy'])
+                ->where('enabled', true)
+                ->findOrFail($product_id);
+
+            $registryId = $request->query('registry');
+
+            
+
+            $cartItems = \App\Models\RegistryGiftCart::where('registry_id', $registryId)
+                ->with('product')
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'id' => $item->product_id,
+                        'name' => $item->product->name,
+                        'price' => $item->product->price,
+                        'quantity' => $item->quantity,
+                        'image' => $item->product->display_image,
+                    ];
+                });
+
+            return inertia('client/registry/create/show-product', [
+                'product' => $product,
+                'registryId' => $registryId,
+                'initialCartItems' => $cartItems,
+            ]);
+        })->name('show-product');
 
         Route::post('/', [RegistryController::class, 'store'])->name('store-registry');
 
+        Route::post('gift-cart', [RegistryGiftCartController::class, 'addGiftToCart'])
+            ->name('add-gift-to-cart');
+
+        Route::delete('gift-cart', [RegistryGiftCartController::class, 'deleteItemFromCart'])
+            ->name('delete-gift-from-cart');
+
         Route::middleware('registry.owner')->group(function () {
-            Route::post('gift-cart', [RegistryGiftCartController::class, 'addGiftToCart'])
-                ->name('add-gift-to-cart');
-
-            Route::delete('gift-cart', [RegistryGiftCartController::class, 'deleteItemFromCart'])
-                ->name('delete-gift-from-cart');
-
             Route::get('delivery-info', function () {});
 
             Route::post('delivery-info', function () {});
-
-
-
-            Route::get('/select-gifts', [ClientController::class, 'showProduct'])
-                ->name('select-gifts');
 
             Route::get('/delivery-data', function (Request $request) {
                 $registryId = $request->query('registry');
                 $user = $request->user();
                 $user_id = $user->id;
-                $registry = Registry::where('user_id', $user_id)->with(['category'])->find($registryId);
+                $registry = Registry::where('user_id', $user_id)->with(['event'])->find($registryId);
                 return Inertia('client/registry/create/fill-delivery-data', ['registry' => $registryId, 'registry_detail' => $registry]);
             })->name('delivery-data');
 
@@ -64,33 +100,35 @@ Route::middleware('auth')->group(function () {
                 $registryId = $request->query('registry');
                 $user = $request->user();
                 $user_id = $user->id;
-                $registry = Registry::where('user_id', $user_id)->with(['category', 'products', 'deliveryInfo'])->find($registryId);
+                $registry = Registry::where('user_id', $user_id)->with(['event', 'products', 'deliveryInfo'])->find($registryId);
                 return Inertia('client/registry/create/share-registry', ['registry' => $registry]);
             })->name('share-registry');
         });
     });
 });
 
-Route::prefix('registry')->name('registry.')->group(function() {
-    Route::get('{registry_id}', function(Request $request) {
-        $registry_id = $request->registry_id;
-        $registry = Registry::with(['category', 'products', 'deliveryInfo'])->find($registry_id);
-        
+Route::prefix('registry')->name('registry.')->group(function () {
+    Route::get('{magic_link}', function (Request $request) {
+        $magic_link = $request->magic_link;
+        $registry = Registry::with(['event', 'products', 'deliveryInfo'])->where([
+            'magic_link' => $magic_link
+        ])->first();
+
         if (!$registry || !$registry->deliveryInfo) {
             abort(404);
         }
-        
+
         return Inertia('client/registry/show/public', ['registry' => $registry]);
     });
 
-    Route::get('checkout/{registry_id}', function(Request $request) {
+    Route::get('checkout/{registry_id}', function (Request $request) {
         $registry_id = $request->registry_id;
         $registry = Registry::with(['category', 'products', 'deliveryInfo'])->find($registry_id);
-        
+
         if (!$registry || !$registry->deliveryInfo) {
             abort(404);
         }
-        
+
         return Inertia('client/registry/checkout', ['registry' => $registry]);
     })->name('checkout');
 });

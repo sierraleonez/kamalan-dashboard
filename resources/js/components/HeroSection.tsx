@@ -38,7 +38,7 @@ export default function HeroSection({ onClickCreateRegistry }: HeroSectionProps)
             {/* Hero Image */}
             <div className="relative h-[60vh] md:h-[70vh] overflow-hidden">
                 <img
-                    src="/images/gift-giving.jpg"
+                    src="/images/baby-shower.jpg"
                     alt="Artisanal gift collection"
                     className="w-full h-full object-cover"
                 />
@@ -48,7 +48,7 @@ export default function HeroSection({ onClickCreateRegistry }: HeroSectionProps)
                 <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center text-white px-4 max-w-4xl">
                         <h1 className="font-serif text-white text-4xl md:text-6xl font-bold mb-4">
-                            Gift Registry
+                            Baby Registry
                         </h1>
                         <p className="text-lg text-white md:text-xl mb-8 max-w-2xl mx-auto">
                             Wujudkan momen istimewa dengan koleksi hadiah pilihan yang dipersonalisasi untuk setiap acara

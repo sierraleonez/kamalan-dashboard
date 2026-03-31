@@ -24,7 +24,7 @@ export default function Footer() {
                                     Cerita Kamalan
                                 </a>
                             </li>
-                            <li>
+                            {/* <li>
                                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
                                     Tim Kami
                                 </a>
@@ -38,7 +38,7 @@ export default function Footer() {
                                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
                                     Sustainability
                                 </a>
-                            </li>
+                            </li> */}
                         </ul>
                     </div>
 
@@ -51,11 +51,11 @@ export default function Footer() {
                                     FAQ
                                 </a>
                             </li>
-                            <li>
+                            {/* <li>
                                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
                                     Shipping & Returns
                                 </a>
-                            </li>
+                            </li> */}
                             <li>
                                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
                                     Privacy Policy
@@ -77,6 +77,13 @@ export default function Footer() {
                                 <Instagram className="w-6 h-6" />
                             </a>
                             <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                                <img src="/images/icons/tiktok-icon.webp" alt="TikTok" className="w-6 h-6" />
+                            </a>
+                            <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                                <img src="/images/icons/threads-icon.png" alt="Threads" className="w-6 h-6" />
+                            </a>
+                            
+                            {/* <a href="#" className="text-gray-300 hover:text-white transition-colors">
                                 <Facebook className="w-6 h-6" />
                             </a>
                             <a href="#" className="text-gray-300 hover:text-white transition-colors">
@@ -84,7 +91,7 @@ export default function Footer() {
                             </a>
                             <a href="#" className="text-gray-300 hover:text-white transition-colors">
                                 <Youtube className="w-6 h-6" />
-                            </a>
+                            </a> */}
                         </div>
                         <ul className="space-y-3">
                             <li>
@@ -101,7 +108,7 @@ export default function Footer() {
                     </div>
 
                     {/* Newsletter Section */}
-                    <div>
+                    {/* <div>
                         <div className="flex items-center mb-4">
                             <Heart className="w-6 h-6 text-[#889966] mr-2" />
                             <h3 className="font-serif text-white text-xl font-bold">Kawankamalan</h3>
@@ -129,7 +136,7 @@ export default function Footer() {
                                 Subscribe
                             </button>
                         </form>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Bottom Section */}

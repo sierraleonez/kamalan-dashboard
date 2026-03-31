@@ -18,12 +18,12 @@ class ProductFactory extends Factory
     {
         return [
             'name' => fake()->words(3, true),
-            'description' => fake()->paragraph(),
+            'description' => fake()->paragraph(1),
             'display_image' => fake()->imageUrl(640, 480, 'products'),
             'affiliate_link' => fake()->url(),
             'enabled' => fake()->boolean(80), // 80% chance of being enabled
             'price' => fake()->numberBetween(10000, 1000000), // Price in IDR
-            'category_id' => 3,
+            'event_id' => fake()->numberBetween(1, 6), // Random event (1-6)
             'merchant_id' => 2,
             'created_by' => 1,
         ];

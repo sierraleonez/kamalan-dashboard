@@ -2,13 +2,13 @@ import ProductDetailLayout, { ProductDetailData } from "@/components/layout/prod
 import Navbar from "@/components/Navbar";
 import RegistryCart from "@/components/registry-cart";
 import RegistryCheckoutDialog from "@/components/registry-checkout-dialog";
-import { ViewMode } from "@/types";
+import { InertiaPageProps, ViewMode } from "@/types";
 import { DeliveryInfo, Registry, Product as RegistryProduct, GiftCart } from "@/types/response";
 import { Head, router } from "@inertiajs/react";
 import { useGuestCartHook } from "@/hooks/use-guest-cart-hook";
 import { useState } from "react";
 
-interface ShowProductProps {
+interface ShowProductProps extends InertiaPageProps {
     product: ProductDetailData;
     registry?: Registry & { 
         delivery_info: DeliveryInfo;
@@ -16,7 +16,7 @@ interface ShowProductProps {
     };
 }
 
-export default function ShowProduct({ product, registry }: ShowProductProps) {
+export default function ShowProduct({ product, registry, auth }: ShowProductProps) {
     const isRegistryView = !!registry;
     const viewMode: ViewMode = isRegistryView ? 'share-registry' : 'store';
     const [showCheckoutDialog, setShowCheckoutDialog] = useState(false);
@@ -72,10 +72,10 @@ export default function ShowProduct({ product, registry }: ShowProductProps) {
                         onAddToCart={handleAddToCart}
                         isInCart={cartItems.some(item => item.id === product.id)}
                         registry={registry}
-                        viewMode={viewMode}
+                        viewMode={'store'}
                     />
                     
-                    {!isRegistryView && (
+                    {isRegistryView && (
                         <RegistryCart
                             registryTitle="Shopping Cart"
                             items={cartItems}

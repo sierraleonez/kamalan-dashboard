@@ -22,6 +22,8 @@ export function UserMenuContent({ user }: Props) {
     const handleLogout = () => {
         cleanup();
         router.flushAll();
+        sessionStorage.clear();
+        localStorage.clear();
     };
 
     return (

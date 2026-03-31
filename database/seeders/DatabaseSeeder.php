@@ -24,10 +24,15 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
             MerchantSeeder::class,
+            EventSeeder::class,
             CategorySeeder::class
         ]);
         
-        // Create 50 products
-        Product::factory()->count(50)->create();
+        // Create 50 products and attach random categories
+        Product::factory()->count(50)->create()->each(function ($product) {
+            // Attach 1-3 random categories to each product
+            $categoryIds = \App\Models\Category::inRandomOrder()->limit(rand(1, 3))->pluck('id');
+            $product->categories()->attach($categoryIds);
+        });
     }
 }

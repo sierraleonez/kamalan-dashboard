@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { InfiniteScroll, router } from '@inertiajs/react';
+import { InfiniteScroll, router, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -8,6 +8,7 @@ import { Search, MapPin, Filter, ChevronDown, Plus } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import client from '@/routes/client';
 import products from '@/routes/products';
+import createRegistry from '@/routes/create-registry';
 
 interface iPaginatedResponse<T> {
     current_page: number;
@@ -44,18 +45,35 @@ interface ProductCardProps {
     product: iProduct;
     onAddToCart: (product: iProduct) => void;
     registryId?: number;
+    onBuyNow?: (product: iProduct) => void;
 }
 
-function ProductCard({ product, onAddToCart, registryId }: ProductCardProps) {
+export function ProductCard({ product, onAddToCart, registryId, onBuyNow }: ProductCardProps) {
     function onCickProduct() {
         // Navigate to product detail page with registry ID
-        const url = registryId ? `${client.show(product.id).url}?registry=${registryId}` : products.show(product.id).url;
+        const registryUrl = createRegistry.showProduct({
+            product_id: product.id,
+        }, {
+            query: { registry: registryId }
+        }).url
+        const guestUrl = products.show(product.id).url
+
+        const url = registryId ? registryUrl : guestUrl ;
         router.visit(url);
     }
 
     function handleAddToCart(e: React.MouseEvent) {
         e.stopPropagation();
         onAddToCart(product);
+    }
+
+    function handleBuyNow(e: React.MouseEvent) {
+        e.stopPropagation();
+        if (onBuyNow) {
+            onBuyNow(product);
+        } else if (product.affiliate_link) {
+            window.open(product.affiliate_link, '_blank');
+        }
     }
 
     return (
@@ -68,25 +86,35 @@ function ProductCard({ product, onAddToCart, registryId }: ProductCardProps) {
                 />
             </div>
             <div className="p-4">
-                <h3 className="font-inter font-medium text-gray-900 mb-2 line-clamp-2">
+                <h3 className="font-inter font-medium text-gray-900 mb-2 line-clamp-2 min-h-[3rem]">
                     {product.name}
                 </h3>
                 <p className="text-xl font-bold text-[#A3B18A] mb-1">
                     Rp {product.price.toLocaleString('id-ID')}
                 </p>
-                <p className="text-sm text-gray-600 mb-1">Kamalan</p>
-                <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-600 mb-3">Kamalan</p>
+                <div className="flex items-center justify-between gap-2 mb-3">
                     <div className="flex items-center text-xs text-gray-500">
                         <MapPin className="w-3 h-3 mr-1" />
                         Jakarta
                     </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                    <Button
+                        size="sm"
+                        onClick={handleAddToCart}
+                        className="w-full bg-[#BBCC77] hover:bg-[#A3B18A] text-white text-xs py-2"
+                    >
+                        <Plus className="w-3 h-3 mr-1" />
+                        Tambah Registry
+                    </Button>
                     <Button
                         size="sm"
                         variant="outline"
-                        onClick={handleAddToCart}
-                        className="h-8 w-8 p-0 ml-2 border-primary text-primary hover:bg-primary hover:text-white"
+                        onClick={handleBuyNow}
+                        className="w-full border-[#BBCC77] text-[#BBCC77] hover:bg-[#BBCC77] hover:text-white text-xs py-2"
                     >
-                        <Plus className="w-4 h-4" />
+                        Miliki Sekarang
                     </Button>
                 </div>
             </div>
@@ -166,31 +194,38 @@ export interface ProductListLayoutProps {
     products: iPaginatedResponse<iProduct>;
     registryId?: number;
     onAddToCart: (product: iProduct) => void;
+    onBuyNow?: (product: iProduct) => void;
     showHero?: boolean;
     heroSlides?: string[];
+    showFilters?: boolean;
+    showSearch?: boolean;
 }
 
 export default function ProductListLayout({ 
     products, 
     registryId, 
     onAddToCart,
+    onBuyNow,
     showHero = true,
     heroSlides = [
         "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&h=400&fit=crop",
         "https://images.unsplash.com/photo-1544427920-c49ccfb85579?w=1200&h=400&fit=crop",
         "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=1200&h=400&fit=crop"
-    ]
+    ],
+    showFilters = true,
+    showSearch = true
 }: ProductListLayoutProps) {
     const [currentSlide, setCurrentSlide] = useState(0);
-
     return (
         <div className="flex lg:gap-8">
             {/* Desktop Sidebar */}
-            <aside className="hidden lg:block w-64 shrink-0">
-                <Card className="gap-2 p-6 bg-white border-none">
-                    <FilterSidebar />
-                </Card>
-            </aside>
+            {showFilters && (
+                <aside className="hidden lg:block w-64 shrink-0">
+                    <Card className="gap-2 p-6 bg-white border-none">
+                        <FilterSidebar />
+                    </Card>
+                </aside>
+            )}
 
             {/* Main Feed */}
             <main className="flex-1">
@@ -226,48 +261,55 @@ export default function ProductListLayout({
                 )}
 
                 {/* Search & Sort */}
-                <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                    <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <Input
-                            placeholder="Search for hampers, gifts, brands..."
-                            className="pl-10 border-primary"
-                        />
-                    </div>
+                {(showSearch || showFilters) && (
+                    <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                        {showSearch && (
+                            <div className="flex-1 relative">
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                                <Input
+                                    placeholder="Search for hampers, gifts, brands..."
+                                    className="pl-10 border-primary"
+                                />
+                            </div>
+                        )}
 
-                    <div className="flex gap-2">
-                        {/* Mobile Filter Button */}
-                        <Sheet>
-                            <SheetTrigger asChild>
-                                <Button variant="outline" className="lg:hidden">
-                                    <Filter className="w-4 h-4 mr-2" />
-                                    Filters
-                                </Button>
-                            </SheetTrigger>
-                            <SheetContent side="left" className="w-80">
-                                <SheetHeader>
-                                    <SheetTitle className="font-serif">Filters</SheetTitle>
-                                </SheetHeader>
-                                <div className="mt-6">
-                                    <FilterSidebar />
-                                </div>
-                            </SheetContent>
-                        </Sheet>
+                        <div className="flex gap-2">
+                            {/* Mobile Filter Button */}
+                            {showFilters && (
+                                <Sheet>
+                                    <SheetTrigger asChild>
+                                        <Button variant="outline" className="lg:hidden">
+                                            <Filter className="w-4 h-4 mr-2" />
+                                            Filters
+                                        </Button>
+                                    </SheetTrigger>
+                                    <SheetContent side="left" className="w-80">
+                                        <SheetHeader>
+                                            <SheetTitle className="font-serif">Filters</SheetTitle>
+                                        </SheetHeader>
+                                        <div className="mt-6">
+                                            <FilterSidebar />
+                                        </div>
+                                    </SheetContent>
+                                </Sheet>
+                            )}
 
-                        <Button variant="outline" className="min-w-[120px] bg-primary text-white border-primary hover:bg-primary/90 focus:ring-primary/50">
-                            Sort By <ChevronDown className="w-4 h-4 ml-2" />
-                        </Button>
+                            <Button variant="outline" className="min-w-[120px] bg-primary text-white border-primary hover:bg-primary/90 focus:ring-primary/50">
+                                Sort By <ChevronDown className="w-4 h-4 ml-2" />
+                            </Button>
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Product Grid */}
-                <InfiniteScroll data='products' >
+                <InfiniteScroll data='products'>
                     <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {products.data.map(product => (
                             <ProductCard 
                                 key={product.id} 
                                 product={product} 
                                 onAddToCart={onAddToCart} 
+                                onBuyNow={onBuyNow}
                                 registryId={registryId} 
                             />
                         ))}

@@ -7,12 +7,12 @@ import { selectGifts, storeRegistry } from '@/routes/create-registry';
 import { EventCategory } from '@/types/response';
 
 
-export default function CreateRegistry({ categories }: { categories: Array<EventCategory> }) {
+export default function CreateRegistry({ events }: { events: Array<EventCategory> }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedEvent, setSelectedEvent] = useState('');
 
-    const handleCategorySelect = (categoryId: string) => {
-        setSelectedCategory(categoryId);
+    const handleEventSelect = (eventId: string) => {
+        setSelectedEvent(eventId);
         setTimeout(() => {
             setIsModalOpen(true);
         }, 300); // Optional: Add a slight delay for better UX
@@ -45,24 +45,24 @@ export default function CreateRegistry({ categories }: { categories: Array<Event
                 <div className="max-w-6xl mx-auto">
                     {/* Desktop: 4-column horizontal grid */}
                     <div className="hidden md:grid md:grid-cols-4 gap-6">
-                        {categories.map((category) => (
+                        {events.map((event) => (
                             <CategoryCard
-                                key={category.id}
-                                title={category.name}
-                                imageUrl={category.background_image}
-                                onClick={() => handleCategorySelect(category.id)}
+                                key={event.id}
+                                title={event.name}
+                                imageUrl={event.background_image}
+                                onClick={() => handleEventSelect(event.id)}
                             />
                         ))}
                     </div>
 
                     {/* Mobile: vertical list */}
                     <div className="md:hidden space-y-4">
-                        {categories.map((category) => (
+                        {events.map((event) => (
                             <CategoryCard
-                                key={category.id}
-                                title={category.name}
-                                imageUrl={category.background_image}
-                                onClick={() => handleCategorySelect(category.id)}
+                                key={event.id}
+                                title={event.name}
+                                imageUrl={event.background_image}
+                                onClick={() => handleEventSelect(event.id)}
                             />
                         ))}
                     </div>
@@ -83,7 +83,7 @@ export default function CreateRegistry({ categories }: { categories: Array<Event
             <RegistryFormModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                categoryId={selectedCategory}
+                eventId={selectedEvent}
                 onSuccess={handleModalSuccess}
             />
         </div>

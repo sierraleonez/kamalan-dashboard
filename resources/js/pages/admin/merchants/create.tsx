@@ -1,26 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AppLayout from '@/layouts/app-layout';
-import { useForm } from '@inertiajs/react';
+import { useForm, router, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import InputError from '@/components/input-error';
 import merchants from '@/routes/admin/merchants';
+import admin from '@/routes/admin';
+import { Upload } from 'lucide-react';
 
 interface Props {
     errors?: Record<string, string[]>;
 }
 
 export default function MerchantCreate({ errors = {} }: Props) {
+    const [iconPreview, setIconPreview] = useState<string | null>(null);
+    const props = usePage().props;
+    
     const { data, setData, post, processing } = useForm({
         name: '',
         shopee_link: '',
         tokped_link: '',
         shop_location: '',
+        merchant_icon_url: '',
     });
 
+    useEffect(() => {
+        const flashData = props?.flash as { image_url?: string } | undefined;
+        if (flashData?.image_url) {
+            setData('merchant_icon_url', flashData.image_url);
+            setIconPreview(flashData.image_url);
+        }
+    }, [props?.flash]);
+
+    const handleIconUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => setIconPreview(e.target?.result as string);
+            reader.readAsDataURL(file);
+
+            const formData = new FormData();
+            formData.append('image', file);
+            router.post(admin.uploadImage.url(), formData, {
+                onSuccess: (response) => {
+                    console.log('Image uploaded successfully:', response);
+                }
+            });
+        }
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setData(e.target.name, e.target.value);
+        setData(e.target.name as keyof typeof data, e.target.value);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -42,6 +73,51 @@ export default function MerchantCreate({ errors = {} }: Props) {
                         placeholder="Enter merchant name"
                     />
                     <InputError message={errors.name?.[0]} />
+                </div>
+
+                <div className="grid gap-2">
+                    <Label htmlFor="merchant_icon_url">Merchant Icon *</Label>
+                    {iconPreview && (
+                        <div className="relative w-full max-w-md mb-2">
+                            <img 
+                                src={iconPreview} 
+                                alt="Merchant icon preview" 
+                                className="w-24 h-24 object-contain rounded-lg border border-gray-300 p-2"
+                            />
+                            <label className="absolute bottom-2 right-2 cursor-pointer inline-flex items-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 rounded-md hover:bg-primary/90 transition-colors shadow-lg">
+                                <Upload size={14} />
+                                Change Icon
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleIconUpload}
+                                    className="sr-only"
+                                />
+                            </label>
+                        </div>
+                    )}
+                    <div className="flex gap-2">
+                        <label className="cursor-pointer inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors whitespace-nowrap">
+                            <Upload size={16} />
+                            Upload Icon
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleIconUpload}
+                                className="sr-only"
+                            />
+                        </label>
+                        <Input 
+                            id="merchant_icon_url" 
+                            name="merchant_icon_url" 
+                            value={data.merchant_icon_url} 
+                            onChange={handleChange} 
+                            placeholder="Or enter icon URL" 
+                            className="flex-1"
+                            required
+                        />
+                    </div>
+                    <InputError message={errors.merchant_icon_url?.[0]} />
                 </div>
 
                 <div className="grid gap-2">

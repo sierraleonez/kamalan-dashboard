@@ -14,6 +14,11 @@ interface PurchaseButtonProps {
 
 export default function PurchaseButton({ affiliate_link, productName, onAddToCart, productId, isInCart, viewMode, receiverName }: PurchaseButtonProps) {
     const handlePurchaseClick = () => {
+        if (viewMode === 'store') {
+            window.open(affiliate_link, '_blank', 'noopener,noreferrer');
+            return
+        }
+
         if (onAddToCart) {
             onAddToCart();
         } else if (affiliate_link) {

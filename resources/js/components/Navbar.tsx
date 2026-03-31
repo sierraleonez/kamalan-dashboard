@@ -42,6 +42,8 @@ export default function Navbar({ showRegistryBreadcrumbs = false, currentRegistr
         router.post('/logout', {}, {
             onSuccess: () => {
                 setShowUserTooltip(false);
+                router.flushAll()
+                sessionStorage.clear();
             }
         });
     };
@@ -81,27 +83,27 @@ export default function Navbar({ showRegistryBreadcrumbs = false, currentRegistr
                             e.currentTarget.nextElementSibling!.style.display = 'block';
                         }}
                     />
-                    <span className="hidden font-serif text-2xl font-bold text-[#889966]">Kamalan</span>
+                    <span className="hidden font-serif text-2xl font-bold text-[#BBCC77]">Kamalan</span>
                 </div>
 
                 {/* <nav className="hidden md:flex items-center space-x-8">
-                    <a href="#" className="text-[oklch(0.145_0_0)] hover:text-[#889966] transition-colors font-medium">
+                    <a href="#" className="text-[oklch(0.145_0_0)] hover:text-[#BBCC77] transition-colors font-medium">
                         Home
                     </a>
-                    <a href="#" className="text-[oklch(0.145_0_0)] hover:text-[#889966] transition-colors font-medium">
+                    <a href="#" className="text-[oklch(0.145_0_0)] hover:text-[#BBCC77] transition-colors font-medium">
                         Registry
                     </a>
-                    <a href="#" className="text-[oklch(0.145_0_0)] hover:text-[#889966] transition-colors font-medium">
+                    <a href="#" className="text-[oklch(0.145_0_0)] hover:text-[#BBCC77] transition-colors font-medium">
                         Tentang
                     </a>
-                    <a href="#" className="text-[oklch(0.145_0_0)] hover:text-[#889966] transition-colors font-medium">
+                    <a href="#" className="text-[oklch(0.145_0_0)] hover:text-[#BBCC77] transition-colors font-medium">
                         Kontak
                     </a>
                 </nav> */}
 
                 <div className="flex items-center space-x-6">
-                    <Heart className="w-6 h-6 cursor-pointer text-[oklch(0.145_0_0)] hover:text-[#889966] transition-colors" />
-                    <ShoppingCart className="w-6 h-6 cursor-pointer text-[oklch(0.145_0_0)] hover:text-[#889966] transition-colors" />
+                    <img src="/images/icons/kama-love.svg" alt="Wishlist" className="w-6 h-6 cursor-pointer hover:opacity-80 transition-opacity" />
+                    {/* <ShoppingCart className="w-6 h-6 cursor-pointer text-[oklch(0.145_0_0)] hover:text-[#BBCC77] transition-colors" /> */}
                     
                     {/* User Icon with Tooltip */}
                     <div className="relative">
@@ -110,7 +112,7 @@ export default function Navbar({ showRegistryBreadcrumbs = false, currentRegistr
                             onClick={() => setShowUserTooltip(!showUserTooltip)}
                             className="cursor-pointer"
                         >
-                            <User className="w-6 h-6 text-[oklch(0.145_0_0)] hover:text-[#889966] transition-colors" />
+                            <img src="/images/icons/kama-account.svg" alt="Account" className="w-6 h-6 hover:opacity-80 transition-opacity" />
                         </div>
 
                         {/* User Tooltip */}
@@ -124,7 +126,7 @@ export default function Navbar({ showRegistryBreadcrumbs = false, currentRegistr
                                     <div>
                                         <div className="px-4 py-3 border-b border-gray-100">
                                             <div className="flex items-center space-x-3">
-                                                <div className="w-10 h-10 bg-[#889966] rounded-full flex items-center justify-center">
+                                                <div className="w-10 h-10 bg-[#BBCC77] rounded-full flex items-center justify-center">
                                                     <span className="text-white font-medium">
                                                         {auth.user.name ? auth.user.name.charAt(0).toUpperCase() : auth.user.email.charAt(0).toUpperCase()}
                                                     </span>
@@ -199,9 +201,9 @@ export default function Navbar({ showRegistryBreadcrumbs = false, currentRegistr
                                 <div className={`
                                     px-3 py-2 rounded-md text-sm font-medium transition-all duration-200
                                     ${step.isActive 
-                                        ? 'bg-[#889966] text-[oklch(0.985_0_0)]' 
+                                        ? 'bg-[#BBCC77] text-[oklch(0.985_0_0)]' 
                                         : step.isCompleted 
-                                            ? 'text-[#889966]' 
+                                            ? 'text-[#BBCC77]' 
                                             : 'text-gray-500'
                                     }
                                 `}>
@@ -210,7 +212,7 @@ export default function Navbar({ showRegistryBreadcrumbs = false, currentRegistr
                                 {index < steps.length - 1 && (
                                     <ChevronRight 
                                         className={`w-4 h-4 ${
-                                            step.isCompleted ? 'text-[#889966]' : 'text-gray-400'
+                                            step.isCompleted ? 'text-[#BBCC77]' : 'text-gray-400'
                                         }`} 
                                     />
                                 )}
@@ -221,7 +223,7 @@ export default function Navbar({ showRegistryBreadcrumbs = false, currentRegistr
                     {/* Mobile: Show only current step */}
                     <div className="md:hidden flex items-center">
                         {steps.filter(step => step.isActive).map(step => (
-                            <div key={step.label} className="px-3 py-2 rounded-md text-sm font-medium bg-[#889966] text-[oklch(0.985_0_0)]">
+                            <div key={step.label} className="px-3 py-2 rounded-md text-sm font-medium bg-[#BBCC77] text-[oklch(0.985_0_0)]">
                                 {step.label}
                             </div>
                         ))}

@@ -19,7 +19,7 @@ class Registry extends Model
     protected $fillable = [
         'name',
         'date',
-        'category_id',
+        'event_id',
         'user_id',
         'magic_link',
         'last_step',
@@ -43,11 +43,11 @@ class Registry extends Model
     }
 
     /**
-     * Get the category of the registry.
+     * Get the event of the registry.
      */
-    public function category(): BelongsTo
+    public function event(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Event::class);
     }
 
     /**
@@ -107,15 +107,11 @@ class Registry extends Model
     protected static function booted()
     {
         static::creating(function ($registry) {
-            $category = $registry->category;
-            $categoryName = $category ? $category->name : 'unknown';
-
             $suffix = Str::lower(Str::random(6));
             $slugName = Str::slug($registry->name);
-            $slugCategory = Str::slug($categoryName);
             $date = $registry->date->format('Y-m-d');
 
-            $registry->magic_link = "{$slugName}-$slugCategory-$date-$suffix";
+            $registry->magic_link = "{$slugName}-$date-$suffix";
         });
     }
 }

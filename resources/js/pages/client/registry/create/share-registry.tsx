@@ -7,6 +7,7 @@ import { Copy, MessageCircle, Mail, Send, Calendar, Heart, Check } from 'lucide-
 import Navbar from '@/components/Navbar';
 import RegistryCard from '@/components/RegistryCard';
 import { DeliveryInfo, EventCategory, GiftCart, Product, Registry, ShareRegistryResponse } from '@/types/response';
+import { home } from '@/routes';
 
 
 
@@ -18,11 +19,12 @@ interface PageProps {
 export default function ShareRegistry(props: PageProps) {
     const registryData = props.registry;
     const deliveryData = props.registry.delivery_info;
+    const registryUrl = `${window.location.origin}/registry/${registryData.magic_link}`;
     const [isCopied, setIsCopied] = useState(false);
 
     const handleCopyUrl = async () => {
         try {
-            await navigator.clipboard.writeText(registryData.magic_link);
+            await navigator.clipboard.writeText(registryUrl);
             setIsCopied(true);
             setTimeout(() => setIsCopied(false), 2000);
         } catch (err) {
@@ -31,28 +33,28 @@ export default function ShareRegistry(props: PageProps) {
     };
 
     const handleWhatsAppShare = () => {
-        const message = `Halo! Saya ingin berbagi registry ${registryData.name} dengan Anda. Silakan kunjungi: ${registryData.magic_link}`;
+        const message = `Halo! Saya ingin berbagi registry ${registryData.name} dengan Anda. Silakan kunjungi: ${registryUrl}`;
         const encodedMessage = encodeURIComponent(message);
         window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
     };
 
     const handleGmailShare = () => {
         const subject = `Undangan Registry - ${registryData.name}`;
-        const body = `Halo!\n\nSaya ingin berbagi registry ${registryData.name} dengan Anda.\n\n${deliveryData.greeting}\n\nSilakan kunjungi registry kami di: ${registryData.magic_link}\n\nTerima kasih!`;
+        const body = `Halo!\n\nSaya ingin berbagi registry ${registryData.name} dengan Anda.\n\n${deliveryData.greeting}\n\nSilakan kunjungi registry kami di: ${registryUrl}\n\nTerima kasih!`;
         const encodedSubject = encodeURIComponent(subject);
         const encodedBody = encodeURIComponent(body);
         window.open(`mailto:?subject=${encodedSubject}&body=${encodedBody}`, '_blank');
     };
 
     const handleTelegramShare = () => {
-        const message = `Halo! Saya ingin berbagi registry ${registryData.name} dengan Anda. Silakan kunjungi: ${registryData.magic_link}`;
+        const message = `Halo! Saya ingin berbagi registry ${registryData.name} dengan Anda. Silakan kunjungi: ${registryUrl}`;
         const encodedMessage = encodeURIComponent(message);
-        window.open(`https://t.me/share/url?url=${registryData.magic_link}&text=${encodedMessage}`, '_blank');
+        window.open(`https://t.me/share/url?url=${registryUrl}&text=${encodedMessage}`, '_blank');
     };
 
     const handleNext = () => {
         // Navigate to next step or completion page
-        router.visit('/dashboard');
+        router.visit(home.url());
     };
 
     return (
@@ -89,7 +91,7 @@ export default function ShareRegistry(props: PageProps) {
                                 <div className="flex gap-3">
                                     <Input
                                         id="registry-url"
-                                        value={registryData.magic_link}
+                                        value={registryUrl}
                                         readOnly
                                         className="flex-1 bg-[--background] border-[--border] text-[--foreground] focus:border-[--primary] focus:ring-[--primary]/20"
                                     />
@@ -190,7 +192,7 @@ export default function ShareRegistry(props: PageProps) {
                                 <div className="space-y-3">
                                     <Input
                                         id="registry-url-mobile"
-                                        value={registryData.registryUrl}
+                                        value={registryUrl}
                                         readOnly
                                         className="w-full bg-[--background] border-[--border] text-[--foreground] focus:border-[--primary] focus:ring-[--primary]/20"
                                     />

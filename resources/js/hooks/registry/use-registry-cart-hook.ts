@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { router } from '@inertiajs/react';
-import { addGiftToCart, deliveryData } from '@/routes/create-registry';
+import { addGiftToCart, deliveryData, storeRegistry, selectGifts } from '@/routes/create-registry';
 
 export interface CartItem {
     id: number;
@@ -20,19 +20,28 @@ export interface Product {
     affiliate_link?: string;
 }
 
+interface User {
+    id: number;
+    name: string;
+    email: string;
+}
+
 interface UseCartHookProps {
     registryId?: number;
     initialCartItems?: CartItem[];
+    user?: User;
 }
 
-export function useRegistryCartHook({ registryId, initialCartItems = [] }: UseCartHookProps) {
+export function useRegistryCartHook({ registryId: initialRegistryId, initialCartItems = [], user }: UseCartHookProps) {
+    console.log(user, 'User in useRegistryCartHook');
     const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems);
+    const [registryId, setRegistryId] = useState<number | undefined>(initialRegistryId);
+    const [isCreatingRegistry, setIsCreatingRegistry] = useState(false);
+    const [pendingProductProcessed, setPendingProductProcessed] = useState(false);
 
-    const addToCart = (product: Product) => {
-        if (!registryId) {
-            console.error('No registry ID available');
-            return;
-        }
+    const addToCart = async (product: Product) => {
+        // If no registryId and user is authenticated, create registry first
+        let currentRegistryId = registryId;
 
         // Optimistically update UI
         setCartItems(prev => {
@@ -53,17 +62,29 @@ export function useRegistryCartHook({ registryId, initialCartItems = [] }: UseCa
             }];
         });
 
-        // Send to backend
+        console.log('Adding to cart with registry ID:', currentRegistryId);
+
+        // Send to backend with the registry ID
         router.post(addGiftToCart.url(), {
             product_id: product.id,
-            registry_id: registryId,
+            registry_id: currentRegistryId,
         }, {
             preserveScroll: true,
-            only: ['cartItems'],
+            only: ['cartItems', 'flash'],
             onSuccess: (page: any) => {
+                // Update registry ID if it was created
+                console.log(page.props.flash.registryId, 'Registry ID from flash after adding to cart');
+                if (page.props.flash?.registryId || currentRegistryId) {
+                    setRegistryId(page.props.flash.registryId || currentRegistryId);
+                    // Update URL with new registry ID
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('registry', page.props.flash.registryId || currentRegistryId);
+                    window.history.replaceState({}, '', url.toString());
+                }
+                
                 // Update cart with server data if available
-                if (page.props.cartItems) {
-                    setCartItems(page.props.cartItems);
+                if (page.props.flash?.cartItems) {
+                    setCartItems(page.props.flash.cartItems);
                 }
             },
             onError: (errors) => {
@@ -131,11 +152,21 @@ export function useRegistryCartHook({ registryId, initialCartItems = [] }: UseCa
         router.visit(deliveryData.url({ query: { registry: registryId } }));
     };
 
+    // Clear cart data when user logs out
+    useEffect(() => {
+        if (!user) {
+            setCartItems([]);
+            setRegistryId(undefined);
+            setPendingProductProcessed(false);
+        }
+    }, [user]);
+
     return {
         cartItems,
         addToCart,
         updateCartQuantity,
         removeFromCart,
         handleContinue,
+        registryId, // Export registryId so components can use it
     };
 }
