@@ -65,9 +65,9 @@ export default function BrandWall({ brands, merchants }: BrandWallProps) {
                                 onClick={() => handleMerchantClick(merchant.id)}
                                 className="flex items-center justify-center py-2 bg-white rounded-lg hover:shadow-lg transition-all duration-300 border border-[oklch(0.922_0_0)] cursor-pointer group"
                             >
-                                <div className="w-full flex items-center justify-center">
+                                <div className="w-full  flex items-center justify-center">
                                     <div className="text-center">
-                                        <div className="w-24 h-16 rounded mx-auto mb-2 flex items-center justify-center">
+                                        <div className="w-32 h-24 rounded mx-auto mb-2 flex items-center justify-center">
                                             <img 
                                                 src={merchant.merchant_icon_url || '/images/icons/kama-love.svg'} 
                                                 alt={`${merchant.name} icon`} 

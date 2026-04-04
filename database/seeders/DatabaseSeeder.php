@@ -29,10 +29,10 @@ class DatabaseSeeder extends Seeder
         ]);
         
         // Create 50 products and attach random categories
-        Product::factory()->count(50)->create()->each(function ($product) {
-            // Attach 1-3 random categories to each product
-            $categoryIds = \App\Models\Category::inRandomOrder()->limit(rand(1, 3))->pluck('id');
-            $product->categories()->attach($categoryIds);
-        });
+        // Product::factory()->count(50)->create()->each(function ($product) {
+        //     // Attach 1-3 random categories to each product
+        //     $categoryIds = \App\Models\Category::inRandomOrder()->limit(rand(1, 3))->pluck('id');
+        //     $product->categories()->attach($categoryIds);
+        // });
     }
 }
