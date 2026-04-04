@@ -36,7 +36,6 @@ export function useRegistryCartHook({ registryId: initialRegistryId, initialCart
     console.log(user, 'User in useRegistryCartHook');
     const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems);
     const [registryId, setRegistryId] = useState<number | undefined>(initialRegistryId);
-    const [isCreatingRegistry, setIsCreatingRegistry] = useState(false);
     const [pendingProductProcessed, setPendingProductProcessed] = useState(false);
 
     const addToCart = async (product: Product) => {
