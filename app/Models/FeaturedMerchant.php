@@ -14,7 +14,7 @@ class FeaturedMerchant extends Model
     ];
 
     protected $casts = [
-        'subscription_date_start' => 'date',
+    'subscription_date_start' => 'date',
         'subscription_date_end' => 'date',
         'priority' => 'integer',
     ];

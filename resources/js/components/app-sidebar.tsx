@@ -20,6 +20,9 @@ import products from '@/routes/admin/products';
 import merchants from '@/routes/admin/merchants';
 import events from '@/routes/admin/events';
 import featuredMerchants from '@/routes/admin/featured-merchants';
+import featuredProducts from '@/routes/admin/featured-products';
+import articles from '@/routes/admin/articles';
+
 
 const mainNavItems: NavItem[] = [
     {
@@ -50,6 +53,16 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Featured Merchants',
         href: featuredMerchants.index(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Featured Products',
+        href: featuredProducts.index(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Articles',
+        href: articles.index(),
         icon: LayoutGrid,
     }
 ];

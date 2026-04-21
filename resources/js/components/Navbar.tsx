@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Heart, ShoppingCart, User, LogOut, LogIn, UserPlus, ChevronRight } from 'lucide-react';
 import { usePage, router } from '@inertiajs/react';
+import { myRegistriesindex } from '@/routes';
 
 interface Step {
     label: string;
@@ -23,7 +24,7 @@ export default function Navbar({ showRegistryBreadcrumbs = false, currentRegistr
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (
-                tooltipRef.current && 
+                tooltipRef.current &&
                 buttonRef.current &&
                 !tooltipRef.current.contains(event.target as Node) &&
                 !buttonRef.current.contains(event.target as Node)
@@ -102,9 +103,12 @@ export default function Navbar({ showRegistryBreadcrumbs = false, currentRegistr
                 </nav> */}
 
                 <div className="flex items-center space-x-6">
-                    <img src="/images/icons/kama-love.svg" alt="Wishlist" className="w-6 h-6 cursor-pointer hover:opacity-80 transition-opacity" />
+                    <div onClick={() => router.visit(myRegistriesindex.url())}>
+                        <img src="/images/icons/kama-love.svg" alt="Wishlist" className="w-6 h-6 cursor-pointer hover:opacity-80 transition-opacity" />
+
+                    </div>
                     {/* <ShoppingCart className="w-6 h-6 cursor-pointer text-[oklch(0.145_0_0)] hover:text-[#BBCC77] transition-colors" /> */}
-                    
+
                     {/* User Icon with Tooltip */}
                     <div className="relative">
                         <div
@@ -141,7 +145,7 @@ export default function Navbar({ showRegistryBreadcrumbs = false, currentRegistr
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="px-2 py-1">
                                             <button
                                                 onClick={handleLogout}
@@ -166,7 +170,7 @@ export default function Navbar({ showRegistryBreadcrumbs = false, currentRegistr
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="px-2 py-1 space-y-1">
                                             <button
                                                 onClick={handleLogin}
@@ -190,7 +194,7 @@ export default function Navbar({ showRegistryBreadcrumbs = false, currentRegistr
                     </div>
                 </div>
             </div>
-            
+
             {/* Registry Breadcrumbs */}
             {showRegistryBreadcrumbs && (
                 <nav className="flex items-center justify-center space-x-2 px-4 py-4 border-t border-[oklch(0.922_0_0)]">
@@ -200,32 +204,47 @@ export default function Navbar({ showRegistryBreadcrumbs = false, currentRegistr
                             <React.Fragment key={step.label}>
                                 <div className={`
                                     px-3 py-2 rounded-md text-sm font-medium transition-all duration-200
-                                    ${step.isActive 
-                                        ? 'bg-[#BBCC77] text-[oklch(0.985_0_0)]' 
-                                        : step.isCompleted 
-                                            ? 'text-[#BBCC77]' 
+                                    ${step.isActive
+                                        ? 'bg-[#BBCC77] text-[oklch(0.985_0_0)]'
+                                        : step.isCompleted
+                                            ? 'text-[#BBCC77]'
                                             : 'text-gray-500'
                                     }
                                 `}>
                                     {step.label}
                                 </div>
                                 {index < steps.length - 1 && (
-                                    <ChevronRight 
-                                        className={`w-4 h-4 ${
-                                            step.isCompleted ? 'text-[#BBCC77]' : 'text-gray-400'
-                                        }`} 
+                                    <ChevronRight
+                                        className={`w-4 h-4 ${step.isCompleted ? 'text-[#BBCC77]' : 'text-gray-400'
+                                            }`}
                                     />
                                 )}
                             </React.Fragment>
                         ))}
                     </div>
-                    
-                    {/* Mobile: Show only current step */}
-                    <div className="md:hidden flex items-center">
-                        {steps.filter(step => step.isActive).map(step => (
-                            <div key={step.label} className="px-3 py-2 rounded-md text-sm font-medium bg-[#BBCC77] text-[oklch(0.985_0_0)]">
-                                {step.label}
-                            </div>
+
+                    {/* Mobile: Show only step numbers */}
+                    <div className="md:hidden flex items-center space-x-2">
+                        {steps.map((step, index) => (
+                            <React.Fragment key={step.label}>
+                                <div className={`
+                                    w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium transition-all duration-200
+                                    ${step.isActive
+                                        ? 'bg-[#BBCC77] text-[oklch(0.985_0_0)]'
+                                        : step.isCompleted
+                                            ? 'bg-[#BBCC77]/20 text-[#BBCC77]'
+                                            : 'bg-gray-200 text-gray-500'
+                                    }
+                                `}>
+                                    {index + 1}
+                                </div>
+                                {index < steps.length - 1 && (
+                                    <ChevronRight
+                                        className={`w-3 h-3 ${step.isCompleted ? 'text-[#BBCC77]' : 'text-gray-400'
+                                            }`}
+                                    />
+                                )}
+                            </React.Fragment>
                         ))}
                     </div>
                 </nav>

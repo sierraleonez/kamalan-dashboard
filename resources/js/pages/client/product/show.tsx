@@ -35,6 +35,7 @@ export default function ShowProduct({ product, registry, auth }: ShowProductProp
         
         // Show checkout dialog after adding to cart (only in registry view)
         if (isRegistryView) {
+            console.log("Product added to cart, showing checkout dialog...");
             setShowCheckoutDialog(true);
         }
     };
@@ -56,6 +57,8 @@ export default function ShowProduct({ product, registry, auth }: ShowProductProp
         // Navigate to checkout page
         router.visit(`/registry/checkout/${registry?.id}`);
     };
+
+    console.log(isRegistryView, registry)
 
     return (
         <div className="min-h-screen bg-[oklch(1_0_0)]">

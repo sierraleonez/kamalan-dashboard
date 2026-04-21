@@ -5,6 +5,7 @@ import merchantsRoute from '@/routes/admin/merchants';
 interface Merchant {
     id: number;
     name: string;
+    description?: string;
     shopee_link?: string;
     tokped_link?: string;
     shop_location?: string;
@@ -47,6 +48,12 @@ export default function MerchantShow({ merchant }: Props) {
                         <div className="mb-2">
                             <span className="font-semibold">Name:</span> {merchant.name}
                         </div>
+                        {merchant.description && (
+                            <div className="mb-2">
+                                <span className="font-semibold">Description:</span>
+                                <p className="mt-1 text-gray-700 whitespace-pre-wrap">{merchant.description}</p>
+                            </div>
+                        )}
                         {merchant.shopee_link && (
                             <div className="mb-2">
                                 <span className="font-semibold">Shopee Link:</span> 

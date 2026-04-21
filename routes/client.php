@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Client\MerchantController;
+use App\Http\Controllers\Client\ArticleController;
+use App\Http\Controllers\Client\ReservationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\Client\RegistryController;
@@ -22,8 +24,17 @@ Route::get('/coming-soon', function () {
 })->name('coming-soon');
 Route::resource('products', ProductController::class);
 
+// Article routes
+Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
+Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
+
 // Merchant routes
 Route::get('/merchant/{merchant}', [MerchantController::class, 'show'])->name('merchant.show');
+
+// Reservation routes (public - no auth required)
+Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
+
+
 
 // Route::get('/products', [ProductController::class, 'index'])->name('product-list');
 // Route::get('/products/{}', [ProductController::class, 'index'])->name('product-list');
@@ -31,6 +42,10 @@ Route::get('/merchant/{merchant}', [MerchantController::class, 'show'])->name('m
 
 // Create registry route (protected)
 Route::middleware('auth')->group(function () {
+    Route::prefix('my-registries')->name('my-registries')->group(function () {
+        Route::get('/', [RegistryController::class, 'index'])->name('index');
+        Route::get('/{registry}', [RegistryController::class, 'show'])->name('show');
+    });
     Route::prefix('create-registry')->name('create-registry.')->group(function () {
 
         Route::get('/select-event', function (Request $request) {
@@ -50,7 +65,7 @@ Route::middleware('auth')->group(function () {
 
             $registryId = $request->query('registry');
 
-            
+
 
             $cartItems = \App\Models\RegistryGiftCart::where('registry_id', $registryId)
                 ->with('product')
@@ -110,13 +125,28 @@ Route::middleware('auth')->group(function () {
 Route::prefix('registry')->name('registry.')->group(function () {
     Route::get('{magic_link}', function (Request $request) {
         $magic_link = $request->magic_link;
-        $registry = Registry::with(['event', 'products', 'deliveryInfo'])->where([
+        $registry = Registry::with([
+            'event',
+            'products' => function ($query) {
+                $query->with(['categories', 'merchant']);
+            },
+            'deliveryInfo',
+            'giftCart.reservation'
+        ])->where([
             'magic_link' => $magic_link
         ])->first();
 
         if (!$registry || !$registry->deliveryInfo) {
             abort(404);
         }
+
+        // Attach reservation data to product pivot
+        $registry->products->each(function ($product) use ($registry) {
+            $giftCartItem = $registry->giftCart->firstWhere('product_id', $product->id);
+            if ($giftCartItem && $giftCartItem->reservation) {
+                $product->pivot->reservation = $giftCartItem->reservation;
+            }
+        });
 
         return Inertia('client/registry/show/public', ['registry' => $registry]);
     });

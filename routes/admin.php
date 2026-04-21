@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\MerchantController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FeaturedMerchantController;
+use App\Http\Controllers\Admin\FeaturedProductController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -29,7 +31,9 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::resource('products', ProductController::class);
     Route::resource('merchants', MerchantController::class);
     Route::resource('events', EventController::class);
+    Route::resource('articles', ArticleController::class);
     Route::resource('featured-merchants', FeaturedMerchantController::class);
+    Route::resource('featured-products', FeaturedProductController::class);
 
     // Admin upload image
     Route::post('upload-image', function (\Illuminate\Http\Request $request) {

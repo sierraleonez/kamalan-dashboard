@@ -45,7 +45,6 @@ interface PageProps {
 export default function RegistryFormData(xprops: PageProps) {
     const registry = xprops.registry;
     const registryDetail = xprops.registry_detail;
-    console.log(xprops)
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const props = usePage().props
     

@@ -4,6 +4,7 @@ import { useForm, router, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import InputError from '@/components/input-error';
 import merchants from '@/routes/admin/merchants';
 import admin from '@/routes/admin';
@@ -19,6 +20,7 @@ export default function MerchantCreate({ errors = {} }: Props) {
     
     const { data, setData, post, processing } = useForm({
         name: '',
+        description: '',
         shopee_link: '',
         tokped_link: '',
         shop_location: '',
@@ -73,6 +75,19 @@ export default function MerchantCreate({ errors = {} }: Props) {
                         placeholder="Enter merchant name"
                     />
                     <InputError message={errors.name?.[0]} />
+                </div>
+
+                <div className="grid gap-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                        id="description"
+                        name="description"
+                        value={data.description}
+                        onChange={handleChange}
+                        placeholder="Enter merchant description"
+                        rows={4}
+                    />
+                    <InputError message={errors.description?.[0]} />
                 </div>
 
                 <div className="grid gap-2">

@@ -12,7 +12,7 @@ import createRegistry from '@/routes/create-registry';
 import products from '@/routes/products';
 
 export default function Landing() {
-    const { auth, products: productList, merchants } = usePage().props as any;
+    const { auth, products: productList, merchants, articles } = usePage().props as any;
     const [showAuthModal, setShowAuthModal] = useState(false);
 
     function handleCreateRegistry() {
@@ -50,14 +50,7 @@ export default function Landing() {
                     onViewAll={handleViewAllProducts}
                 />
                 
-                {/* <FeaturedBanner 
-                    title="Baby Shower Collection"
-                    subtitle="Bulan Ini di Kamalan"
-                    image="https://images.unsplash.com/photo-1544427920-c49ccfb85579?w=1600&h=600&fit=crop"
-                    ctaText="Lihat Koleksi"
-                />
-                
-                <ArticleGrid /> */}
+                <ArticleGrid articles={articles} />
                 
                 <BrandWall merchants={merchants} />
             </main>

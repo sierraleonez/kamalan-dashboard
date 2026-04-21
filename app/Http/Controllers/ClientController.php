@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Merchant;
 use App\Models\FeaturedMerchant;
+use App\Models\FeaturedProduct;
 use App\Models\Registry;
+use App\Models\Article;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,11 +18,15 @@ class ClientController extends Controller
      */
     public function index()
     {
-        // Get 6 featured products for preview
-        $products = Product::with(['categories', 'merchant'])
+        // Get featured products ordered by priority
+        $products = Product::whereHas('featuredProduct')
+            ->with(['categories', 'merchant', 'featuredProduct'])
             ->where('enabled', true)
-            ->take(6)
-            ->get();
+            ->get()
+            ->sortByDesc(function($product) {
+                return $product->featuredProduct->priority ?? 0;
+            })
+            ->values();
 
         // Get featured merchants ordered by priority
         $merchants = Merchant::whereHas('featuredMerchant')
@@ -33,9 +39,16 @@ class ClientController extends Controller
             })
             ->values();
 
+        // Get latest 3 articles for the landing page
+        $articles = Article::with('author')
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get();
+
         return inertia('client/landing', [
             'products' => $products,
             'merchants' => $merchants,
+            'articles' => $articles,
         ]);
     }
 

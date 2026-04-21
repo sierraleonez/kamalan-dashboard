@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class RegistryGiftCart extends Model
 {
@@ -36,6 +37,14 @@ class RegistryGiftCart extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    /**
+     * Get the reservation for this gift cart item.
+     */
+    public function reservation(): HasOne
+    {
+        return $this->hasOne(RegistryWishlistReservation::class, 'registry_gift_cart_id');
     }
 
     /**

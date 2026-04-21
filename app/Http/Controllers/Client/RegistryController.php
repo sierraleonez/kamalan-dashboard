@@ -8,6 +8,38 @@ use Illuminate\Http\Request;
 
 class RegistryController extends Controller
 {
+    /**
+     * Display a listing of registries for the authenticated user.
+     */
+    public function index(Request $request)
+    {
+        $registries = Registry::where('user_id', $request->user()->id)
+            ->with(['event', 'deliveryInfo', 'products'])
+            ->orderBy('date', 'desc')
+            ->get();
+
+        return inertia('client/registry/index', [
+            'registries' => $registries,
+        ]);
+    }
+
+    /**
+     * Display the specified registry (only if owned by authenticated user).
+     */
+    public function show(Request $request, Registry $registry)
+    {
+        // Ensure the registry belongs to the authenticated user
+        if ($registry->user_id !== $request->user()->id) {
+            abort(403, 'Unauthorized access to this registry.');
+        }
+
+        $registry->load(['event', 'deliveryInfo', 'products']);
+
+        return inertia('client/registry/show', [
+            'registry' => $registry,
+        ]);
+    }
+
     public function store(Request $request) {
     // 1. Validate request
     $validated = $request->validate([

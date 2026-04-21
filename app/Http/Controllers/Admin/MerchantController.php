@@ -34,6 +34,7 @@ class MerchantController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'merchant_icon_url' => 'required|string|max:255',
             'shopee_link' => 'nullable|url|max:255',
             'tokped_link' => 'nullable|url|max:255',
@@ -41,7 +42,7 @@ class MerchantController extends Controller
         ]);
 
         Merchant::create($validated);
-        return redirect()->route('merchants.index');
+        return redirect()->route('admin.merchants.index');
     }
 
     /**
@@ -71,6 +72,7 @@ class MerchantController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'merchant_icon_url' => 'required|string|max:255',
             'shopee_link' => 'nullable|url|max:255',
             'tokped_link' => 'nullable|url|max:255',
@@ -78,7 +80,7 @@ class MerchantController extends Controller
         ]);
 
         $merchant->update($validated);
-        return redirect()->route('merchants.index');
+        return redirect()->route('admin.merchants.index');
     }
 
     /**
@@ -87,6 +89,6 @@ class MerchantController extends Controller
     public function destroy(Merchant $merchant)
     {
         $merchant->delete();
-        return redirect()->route('merchants.index');
+        return redirect()->route('admin.merchants.index');
     }
 }

@@ -11,6 +11,7 @@ class Merchant extends Model
 
     protected $fillable = [
         'name',
+        'description',
         'shopee_link',
         'tokped_link',
         'shop_location',

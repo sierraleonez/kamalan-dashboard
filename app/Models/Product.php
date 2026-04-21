@@ -94,4 +94,12 @@ class Product extends Model
                     ->withPivot('quantity')
                     ->withTimestamps();
     }
+
+    /**
+     * Get the featured product record for this product.
+     */
+    public function featuredProduct()
+    {
+        return $this->hasOne(FeaturedProduct::class);
+    }
 }

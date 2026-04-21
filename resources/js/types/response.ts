@@ -50,8 +50,19 @@ export interface DeliveryInfo {
     notes: string;
 }
 
+export interface Reservation {
+    id: number;
+    registry_id: number;
+    registry_gift_cart_id: number;
+    name: string;
+    is_anonymous: boolean;
+    greeting: string | null;
+    display_name: string;
+    created_at: string;
+}
+
 export type ShareRegistryResponse = Registry & {
     event: EventCategory;
-    products: Array<Product & { pivot: GiftCart }>;
+    products: Array<Product & { pivot: GiftCart & { reservation?: Reservation } }>;
     delivery_info: DeliveryInfo
 };

@@ -57,4 +57,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Registry::class);
     }
+
+    /**
+     * Get the articles authored by the user.
+     */
+    public function articles()
+    {
+        return $this->hasMany(Article::class, 'author_id');
+    }
 }

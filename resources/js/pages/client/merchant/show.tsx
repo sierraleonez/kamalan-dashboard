@@ -7,6 +7,7 @@ import { MapPin, ExternalLink } from 'lucide-react';
 interface Merchant {
     id: number;
     name: string;
+    description?: string;
     shop_location?: string;
     shopee_link?: string;
     tokped_link?: string;
@@ -67,12 +68,18 @@ export default function MerchantShow({ merchant, products }: PageProps) {
                                 {merchant.name}
                             </h1>
                             
-                            {merchant.shop_location && (
+                            {merchant.description && (
+                                <p className="text-gray-700 text-lg leading-relaxed mb-4">
+                                    {merchant.description}
+                                </p>
+                            )}
+                            
+                            {/* {merchant.shop_location && (
                                 <div className="flex items-center gap-2 text-gray-600 mb-4">
                                     <MapPin className="w-5 h-5" />
                                     <span className="text-lg">{merchant.shop_location}</span>
                                 </div>
-                            )}
+                            )} */}
 
                             {/* External Links */}
                             {(merchant.shopee_link || merchant.tokped_link) && (

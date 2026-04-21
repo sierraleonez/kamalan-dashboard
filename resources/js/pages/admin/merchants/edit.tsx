@@ -2,6 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import InputError from '@/components/input-error';
 import { useForm, router, usePage } from '@inertiajs/react';
 import merchants from '@/routes/admin/merchants';
@@ -12,6 +13,7 @@ import { useState, useEffect } from 'react';
 interface Merchant {
     id: number;
     name: string;
+    description?: string;
     shopee_link?: string;
     tokped_link?: string;
     shop_location?: string;
@@ -29,6 +31,7 @@ export default function MerchantEdit({ merchant, errors = {} }: Props) {
 
     const { data, setData, put, processing } = useForm({
         name: merchant.name || '',
+        description: merchant.description || '',
         shopee_link: merchant.shopee_link || '',
         tokped_link: merchant.tokped_link || '',
         shop_location: merchant.shop_location || '',
@@ -84,6 +87,19 @@ export default function MerchantEdit({ merchant, errors = {} }: Props) {
                         placeholder="Enter merchant name"
                     />
                     <InputError message={errors.name?.[0]} />
+                </div>
+
+                <div className="grid gap-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                        id="description"
+                        name="description"
+                        value={data.description}
+                        onChange={handleChange}
+                        placeholder="Enter merchant description"
+                        rows={4}
+                    />
+                    <InputError message={errors.description?.[0]} />
                 </div>
 
                 <div className="grid gap-2">

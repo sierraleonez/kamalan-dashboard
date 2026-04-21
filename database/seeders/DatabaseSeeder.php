@@ -25,7 +25,8 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             MerchantSeeder::class,
             EventSeeder::class,
-            CategorySeeder::class
+            CategorySeeder::class,
+            
         ]);
         
         // Create 50 products and attach random categories

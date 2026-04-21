@@ -72,8 +72,16 @@ class Registry extends Model
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'registry_gift_cart')
-                    ->withPivot('quantity')
+                    ->withPivot('id', 'quantity')
                     ->withTimestamps();
+    }
+
+    /**
+     * Get the wishlist reservations for the registry.
+     */
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(RegistryWishlistReservation::class);
     }
 
     /**
