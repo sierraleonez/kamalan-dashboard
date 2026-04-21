@@ -1,1 +1,0 @@
-import{c as e,j as t}from"./app-DrSACkIS.js";function r(n){const a=e.c(1);let o;return a[0]===Symbol.for("react.memo_cache_sentinel")?(o=t.jsx("img",{src:"/kamalan_logo_green.png",alt:"Kamalan Dashboard Logo",className:"h-32 w-32 object-contain"}),a[0]=o):o=a[0],o}export{r as A};
