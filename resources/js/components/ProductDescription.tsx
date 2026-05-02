@@ -26,7 +26,7 @@ export default function ProductDescription({ description }: ProductDescriptionPr
                 </p>
             </div>
 
-            <div>
+            {/* <div>
                 <h3 className="font-serif text-lg font-semibold text-[oklch(0.145_0_0)] mb-3">
                     What's Included
                 </h3>
@@ -38,7 +38,7 @@ export default function ProductDescription({ description }: ProductDescriptionPr
                         </li>
                     ))}
                 </ul>
-            </div>
+            </div> */}
         </div>
     );
 }

@@ -11,8 +11,6 @@ type Category = {
     id: number;
     name: string;
     description?: string;
-    background_image: string;
-    icon: string;
 };
 
 interface Props {
@@ -60,8 +58,6 @@ export default function CategoryList({ categories }: Props) {
                         { label: 'ID', key: 'id' },
                         { label: 'Name', key: 'name' },
                         { label: 'Description', key: 'description' },
-                        { label: 'Background Image', key: 'background_image' },
-                        { label: 'Icon', key: 'icon' },
                         {
                             label: 'Actions',
                             key: 'actions',

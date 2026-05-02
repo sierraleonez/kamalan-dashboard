@@ -14,7 +14,8 @@ class Article extends Model
         'title',
         'description',
         'body',
-        'author_id'
+        'author_id',
+        'cover_image_url'
     ];
 
     /**

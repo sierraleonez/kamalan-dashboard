@@ -8,6 +8,7 @@ use App\Models\FeaturedMerchant;
 use App\Models\FeaturedProduct;
 use App\Models\Registry;
 use App\Models\Article;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -23,18 +24,18 @@ class ClientController extends Controller
             ->with(['categories', 'merchant', 'featuredProduct'])
             ->where('enabled', true)
             ->get()
-            ->sortByDesc(function($product) {
+            ->sortByDesc(function ($product) {
                 return $product->featuredProduct->priority ?? 0;
             })
             ->values();
 
         // Get featured merchants ordered by priority
         $merchants = Merchant::whereHas('featuredMerchant')
-            ->with(['featuredMerchant' => function($query) {
+            ->with(['featuredMerchant' => function ($query) {
                 $query->orderBy('priority', 'desc');
             }])
             ->get()
-            ->sortByDesc(function($merchant) {
+            ->sortByDesc(function ($merchant) {
                 return $merchant->featuredMerchant->priority ?? 0;
             })
             ->values();
@@ -141,8 +142,14 @@ class ClientController extends Controller
         $user = $request->user();
         $registryId = $request->query('registry');
 
+        $categories_params = $request->input(['categories']);
+        $brands_params = $request->input(['brands']);
+        $search_params = $request->input(['search']);
         // Load existing cart items for this registry (only if user is authenticated)
         $cartItems = [];
+
+        $categories = Category::all(['id', 'name']);
+        $brands = Merchant::all(['id', 'name']);
 
         if ($user && $registryId) {
             $cartItems = \App\Models\RegistryGiftCart::where('registry_id', $registryId)
@@ -159,10 +166,35 @@ class ClientController extends Controller
                 });
         }
 
+        $products = Inertia::scroll(
+            fn() => Product::where('enabled', true)
+                ->when($categories_params, function ($query, $category) {
+                    return is_array($category)
+                        ? $query->whereIn('event_id', $category)
+                        : $query->where('event_id', $category);
+                })
+                ->when($brands_params, function($query, $brand) {
+                    return is_array($brand)
+                        ? $query->whereIn('merchant_id', $brand)
+                        : $query->where('merchant_id', $brand);
+                })
+                ->when($search_params, function($query, $search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })
+                ->paginate(15)
+        );
+
         return inertia('client/registry/create/select-gift', [
-            'products' => Inertia::scroll(fn() => Product::where('enabled', true)->paginate(15)),
+            'products' => $products,
             'registryId' => $registryId,
             'initialCartItems' => $cartItems,
+            'categories' => $categories,
+            'brands' => $brands,
+            'filter' => [
+                'categories' => $categories_params,
+                'brands' => $brands_params,
+                'search' => $search_params
+            ]
         ]);
     }
 }

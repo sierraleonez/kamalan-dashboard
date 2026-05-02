@@ -1,7 +1,5 @@
 import React from 'react';
 import { Gift, Calendar, Share2 } from 'lucide-react';
-import { router } from '@inertiajs/react';
-import { home, product } from '@/routes';
 
 interface HeroSectionProps {
     onClickCreateRegistry: () => void;
@@ -87,11 +85,6 @@ export default function HeroSection({ onClickCreateRegistry }: HeroSectionProps)
                         })}
                     </div>
                     
-                    <div className="text-center mt-12">
-                        <button className="bg-[#889966] hover:bg-[#7A8A5C] text-[oklch(0.985_0_0)] font-semibold py-3 px-8 rounded-lg transition-all duration-200 hover:shadow-lg">
-                            Mulai Buat Registry
-                        </button>
-                    </div>
                 </div>
             </div>
         </section>

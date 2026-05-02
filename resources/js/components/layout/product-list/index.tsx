@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { InfiniteScroll, router, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +6,6 @@ import { Card } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Search, MapPin, Filter, ChevronDown, Plus } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
-import client from '@/routes/client';
 import products from '@/routes/products';
 import createRegistry from '@/routes/create-registry';
 
@@ -36,11 +35,6 @@ export interface iProduct {
     affiliate_link?: string;
 }
 
-const categories = ["Sahur", "Lebaran", "Cookies & Snacks", "Traditional", "Premium"];
-const brands = ["Toko Berkah", "Hamper Nusantara", "Sweet Corner", "Desert Gold", "Premium Gifts", "Family Delights"];
-const locations = ["Jakarta", "Bekasi", "Tangerang", "Depok"];
-const types = ["Voucher", "Hamper", "Satuan"];
-
 interface ProductCardProps {
     product: iProduct;
     onAddToCart: (product: iProduct) => void;
@@ -58,7 +52,7 @@ export function ProductCard({ product, onAddToCart, registryId, onBuyNow }: Prod
         }).url
         const guestUrl = products.show(product.id).url
 
-        const url = registryId ? registryUrl : guestUrl ;
+        const url = registryId ? registryUrl : guestUrl;
         router.visit(url);
     }
 
@@ -122,16 +116,47 @@ export function ProductCard({ product, onAddToCart, registryId, onBuyNow }: Prod
     );
 }
 
-function FilterSidebar() {
+interface FilterSidebarProps {
+    categories: Array<{ id: number; name: string }>;
+    brands: Array<{ id: number; name: string }>;
+    filterValues?: {
+        categories: number[];
+        brands: number[];
+        search: string;
+    };
+    addFilter?: (type: 'category' | 'brand' | 'search', id: number | string) => void;
+    removeFilter?: (type: 'category' | 'brand' | 'search', id: number | string) => void;
+}
+
+function FilterSidebar({
+    categories,
+    brands,
+    filterValues,
+    addFilter = () => { },
+    removeFilter = () => { }
+}: FilterSidebarProps) {
+    const selectedCategoriesMap = useMemo(() => new Map(filterValues?.categories?.map(id => [id, true])), [filterValues?.categories]);
+    const selectedBrandsMap = useMemo(() => new Map(filterValues?.brands?.map(id => [id, true])), [filterValues?.brands]);
+    // console.log('Selected Categories Map:', categories);
     return (
         <div className="space-y-3">
             <div>
                 <h3 className="font-serif text-xl text-primary font-medium mb-3">Category</h3>
                 <div className="space-y-2">
                     {categories.map(category => (
-                        <label key={category} className="flex items-center gap-x-2">
-                            <Checkbox id={`category-${category}`} name={`category-${category}`} />
-                            <span className="text-sm">{category}</span>
+                        <label key={category.id} className="flex items-center gap-x-2">
+                            <Checkbox
+                                checked={selectedCategoriesMap.has(String(category.id))}
+                                onCheckedChange={(checked) => {
+                                    console.log(`Category Checkbox Changed - ID: ${category.id}, Checked: ${checked}`);
+                                    if (checked) {
+                                        addFilter('category', category.id);
+                                    } else {
+                                        console.log('removing')
+                                        removeFilter('category', category.id);
+                                    }
+                            }} id={`category-${category.id}`} name={`category-${category.id}`} />
+                            <span className="text-sm">{category.name}</span>
                         </label>
                     ))}
                 </div>
@@ -141,15 +166,27 @@ function FilterSidebar() {
                 <h3 className="font-serif text-xl text-primary font-medium mb-3">Brand</h3>
                 <div className="space-y-2">
                     {brands.map(brand => (
-                        <label key={brand} className="flex items-center gap-x-2 ">
-                            <Checkbox id={`brand-${brand}`} name={`brand-${brand}`} />
-                            <span className="text-sm">{brand}</span>
+                        <label key={brand.id} className="flex items-center gap-x-2 ">
+                            <Checkbox
+                                checked={selectedBrandsMap.has(String(brand.id))}
+                                onCheckedChange={(checked) => {
+                                    console.log(`Brand Checkbox Changed - ID: ${brand.id}, Checked: ${checked}`);
+                                    if (checked) {
+                                        addFilter('brand', brand.id);
+                                    } else {
+                                        removeFilter('brand', brand.id);
+                                    }
+                                }}
+                                id={`brand-${brand.id}`}
+                                name={`brand-${brand.id}`}
+                            />
+                            <span className="text-sm">{brand.name}</span>
                         </label>
                     ))}
                 </div>
             </div>
 
-            <div>
+            {/* <div>
                 <h3 className="font-serif text-xl text-primary font-medium mb-3">Type</h3>
                 <div className="space-y-2">
                     {types.map(type => (
@@ -159,23 +196,27 @@ function FilterSidebar() {
                         </label>
                     ))}
                 </div>
-            </div>
+            </div> */}
 
-            <div>
+            {/* <div>
                 <h3 className="font-serif text-xl text-primary font-medium mb-3">Price Range</h3>
                 <input
                     type="range"
                     min="0"
                     max="500000"
                     className="w-full accent-[#A3B18A]"
+                    onChangeCapture={e => {
+                        e.
+                        console.log('price range', e.target.value)
+                    }}
                 />
                 <div className="flex justify-between text-xs text-gray-500 mt-1">
                     <span>Rp 0</span>
                     <span>Rp 500K+</span>
                 </div>
-            </div>
+            </div> */}
 
-            <div>
+            {/* <div>
                 <h3 className="font-serif text-xl text-primary font-medium mb-3">Location</h3>
                 <div className="space-y-2">
                     {locations.map(location => (
@@ -185,7 +226,7 @@ function FilterSidebar() {
                         </label>
                     ))}
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }
@@ -199,14 +240,28 @@ export interface ProductListLayoutProps {
     heroSlides?: string[];
     showFilters?: boolean;
     showSearch?: boolean;
+    filterValues?: {
+        categories: number[];
+        brands: number[];
+        search: string;
+    };
+    categories?: Array<{ id: number; name: string }>;
+    brands?: Array<{ id: number; name: string }>;
+    addFilter?: (type: 'category' | 'brand' | 'search', id: number | string) => void;
+    removeFilter?: (type: 'category' | 'brand' | 'search', id: number | string) => void;
 }
 
-export default function ProductListLayout({ 
-    products, 
-    registryId, 
+export default function ProductListLayout({
+    products,
+    registryId,
     onAddToCart,
     onBuyNow,
     showHero = true,
+    categories,
+    brands,
+    addFilter = () => { },
+    removeFilter = () => { },
+    filterValues,
     heroSlides = [
         "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&h=400&fit=crop",
         "https://images.unsplash.com/photo-1544427920-c49ccfb85579?w=1200&h=400&fit=crop",
@@ -222,7 +277,13 @@ export default function ProductListLayout({
             {showFilters && (
                 <aside className="hidden lg:block w-64 shrink-0">
                     <Card className="gap-2 p-6 bg-white border-none">
-                        <FilterSidebar />
+                        <FilterSidebar
+                            categories={categories}
+                            brands={brands}
+                            addFilter={addFilter}
+                            removeFilter={removeFilter}
+                            filterValues={filterValues}
+                        />
                     </Card>
                 </aside>
             )}
@@ -264,13 +325,12 @@ export default function ProductListLayout({
                 {(showSearch || showFilters) && (
                     <div className="flex flex-col sm:flex-row gap-4 mb-6">
                         {showSearch && (
-                            <div className="flex-1 relative">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                                <Input
-                                    placeholder="Search for hampers, gifts, brands..."
-                                    className="pl-10 border-primary"
-                                />
-                            </div>
+                            <SearchBox
+                                value={filterValues?.search || ''}
+                                onChange={(value) => {
+                                    addFilter('search', value);
+                                }}
+                            />
                         )}
 
                         <div className="flex gap-2">
@@ -288,7 +348,12 @@ export default function ProductListLayout({
                                             <SheetTitle className="font-serif">Filters</SheetTitle>
                                         </SheetHeader>
                                         <div className="mt-6">
-                                            <FilterSidebar />
+                                            <FilterSidebar
+                                                categories={categories}
+                                                brands={brands}
+                                                addFilter={addFilter}
+                                                removeFilter={removeFilter}
+                                            />
                                         </div>
                                     </SheetContent>
                                 </Sheet>
@@ -305,24 +370,45 @@ export default function ProductListLayout({
                 <InfiniteScroll data='products'>
                     <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {products.data.map(product => (
-                            <ProductCard 
-                                key={product.id} 
-                                product={product} 
-                                onAddToCart={onAddToCart} 
+                            <ProductCard
+                                key={product.id}
+                                product={product}
+                                onAddToCart={onAddToCart}
                                 onBuyNow={onBuyNow}
-                                registryId={registryId} 
+                                registryId={registryId}
                             />
                         ))}
                     </div>
                 </InfiniteScroll>
 
                 {/* Load More */}
-                <div className="text-center mt-12">
+                {/* <div className="text-center mt-12">
                     <Button variant="default" size="lg">
                         Load More Products
                     </Button>
-                </div>
+                </div> */}
             </main>
         </div>
     );
+}
+
+
+interface SearchBoxProps {
+    value: string;
+    onChange: (searchTerm: string) => void;
+}
+
+function SearchBox({ value, onChange }: SearchBoxProps) {
+    return (
+        <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+                placeholder="Search for hampers, gifts, brands..."
+                defaultValue={value}
+                onChange={(e) => onChange(e.target.value)}
+                className="pl-10 border-primary"
+            />
+
+        </div>
+    )
 }

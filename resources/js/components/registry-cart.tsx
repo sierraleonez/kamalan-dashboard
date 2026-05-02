@@ -112,7 +112,7 @@ export default function RegistryCart({
                                 </div>
 
                                 {/* Quantity Selector */}
-                                <div className="flex-1 flex items-center gap-2">
+                                {/* <div className="flex-1 flex items-center gap-2">
                                     <Button
                                         size="sm"
                                         variant="ghost"
@@ -132,7 +132,7 @@ export default function RegistryCart({
                                     >
                                         <Plus className="w-3 h-3" />
                                     </Button>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     ))

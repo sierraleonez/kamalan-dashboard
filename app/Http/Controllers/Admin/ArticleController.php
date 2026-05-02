@@ -36,6 +36,7 @@ class ArticleController extends Controller
             'title' => 'required|string|max:255|unique:articles,title',
             'description' => 'nullable|string',
             'body' => 'required|string',
+            'cover_image_url' => 'nullable|string'
         ]);
 
         $validated['author_id'] = $request->user()->id;
@@ -76,6 +77,7 @@ class ArticleController extends Controller
             'title' => 'required|string|max:255|unique:articles,title,' . $article->id,
             'description' => 'nullable|string',
             'body' => 'required|string',
+            'cover_image_url' => 'nullable|string'
         ]);
 
         $article->update($validated);

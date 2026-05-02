@@ -82,7 +82,7 @@ export default function MerchantShow({ merchant, products }: PageProps) {
                             )} */}
 
                             {/* External Links */}
-                            {(merchant.shopee_link || merchant.tokped_link) && (
+                            {/* {(merchant.shopee_link || merchant.tokped_link) && (
                                 <div className="flex flex-wrap gap-3 mt-6">
                                     {merchant.shopee_link && (
                                         <a
@@ -107,7 +107,7 @@ export default function MerchantShow({ merchant, products }: PageProps) {
                                         </a>
                                     )}
                                 </div>
-                            )}
+                            )} */}
                         </div>
                     </div>
                 </div>

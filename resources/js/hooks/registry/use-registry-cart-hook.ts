@@ -33,7 +33,6 @@ interface UseCartHookProps {
 }
 
 export function useRegistryCartHook({ registryId: initialRegistryId, initialCartItems = [], user }: UseCartHookProps) {
-    console.log(user, 'User in useRegistryCartHook');
     const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems);
     const [registryId, setRegistryId] = useState<number | undefined>(initialRegistryId);
     const [pendingProductProcessed, setPendingProductProcessed] = useState(false);

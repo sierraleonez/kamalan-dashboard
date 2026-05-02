@@ -7,6 +7,7 @@ interface Article {
     description?: string;
     author?: { id: number; name: string };
     created_at?: string;
+    cover_image_url?: string;
 }
 
 interface ArticleGridProps {
@@ -57,7 +58,7 @@ export default function ArticleGrid({ articles }: ArticleGridProps) {
                                     {/* Image */}
                                     <div className="aspect-square overflow-hidden">
                                         <img
-                                            src={defaultImage}
+                                            src={article.cover_image_url || defaultImage}
                                             alt={article.title}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                         />

@@ -31,8 +31,6 @@ class CategoryController extends Controller
         $validated = $request->validate([
             'name' => 'required|unique:categories,name',
             'description' => 'nullable|string',
-            'background_image' => 'required|string',
-            'icon' => 'required|string',
         ]);
         $validated['created_by'] = $request->user()->id;
         $category = Category::create($validated);
@@ -60,8 +58,6 @@ class CategoryController extends Controller
         $validated = $request->validate([
             'name' => 'required|unique:categories,name,' . $category->id,
             'description' => 'nullable|string',
-            'background_image' => 'required|string',
-            'icon' => 'required|string',
         ]);
         $category->update($validated);
         return redirect()->route('admin.categories.index');

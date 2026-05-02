@@ -12,8 +12,6 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('description')->nullable();
-            $table->string('background_image');
-            $table->string('icon');
             $table->timestamps();
         });
     }
