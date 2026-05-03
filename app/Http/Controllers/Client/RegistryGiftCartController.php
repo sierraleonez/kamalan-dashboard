@@ -24,13 +24,14 @@ class RegistryGiftCartController extends Controller
         // 2. Auto-create registry if not provided
         if (!$registryId) {
             // Get default event (event_id = 1)
-            $event = \App\Models\Event::find(1);
+            $default_event_id = 3;
+            $event = \App\Models\Event::find($default_event_id);
             $eventName = $event ? $event->name : 'Event';
             
             // Create registry with default values
             $registry = Registry::create([
                 'user_id' => $user->id,
-                'event_id' => 1,
+                'event_id' => $default_event_id,
                 'name' => $user->name . "'s " . $eventName,
                 'date' => now()->format('Y-m-d'),
             ]);
