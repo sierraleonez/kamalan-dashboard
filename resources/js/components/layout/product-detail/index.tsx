@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import ProductImage from '@/components/ProductImage';
+import ProductImageCarousel from '@/components/ProductImageCarousel';
 import ProductHeader from '@/components/ProductHeader';
 import ProductDescription from '@/components/ProductDescription';
 import PurchaseButton from '@/components/PurchaseButton';
@@ -17,6 +17,7 @@ export interface ProductDetailData {
     display_image: string;
     affiliate_link?: string;
     description?: string;
+    product_images?: { id: number; image_url: string; order: number }[];
     category?: {
         id: number;
         name: string;
@@ -67,9 +68,12 @@ export default function ProductDetailLayout({
                         Kembali
                     </Button>
                     
-                    <ProductImage 
-                        src={product.display_image} 
-                        alt={product.name} 
+                    <ProductImageCarousel
+                        images={[
+                            product.display_image,
+                            ...(product.product_images?.sort((a, b) => a.order - b.order).map(img => img.image_url) || [])
+                        ].filter(Boolean)}
+                        alt={product.name}
                     />
                 </div>
 

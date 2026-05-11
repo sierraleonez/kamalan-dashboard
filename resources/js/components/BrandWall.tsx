@@ -21,6 +21,8 @@ interface BrandWallProps {
     merchants?: Merchant[];
 }
 
+const mailToLink = "mailto:kamalan.registry@gmail.com?subject=Mitra%20Kamalan&body=Halo%20tim%20Kamalan!%0A%0ASaya%20tertarik%20untuk%20mengetahui%20lebih%20lanjut%20tentang%20kemitraan%20yang%20ditawarkan%20oleh%20Kamalan."
+
 export default function BrandWall({ brands, merchants }: BrandWallProps) {
     const defaultBrands: Brand[] = [
         { name: "Dr. Browns", logo: "/images/brand-logo/1.png" },
@@ -51,7 +53,7 @@ export default function BrandWall({ brands, merchants }: BrandWallProps) {
                         Rekan Kamalan
                     </h2>
                     <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                        Berkolaborasi dengan brand-brand terpercaya untuk menghadirkan pengalaman terbaik
+                        Berkolaborasi dengan banyak brand terpercaya untuk memberikan pengalaman tak terlupakan
                     </p>
                 </div>
 
@@ -120,9 +122,11 @@ export default function BrandWall({ brands, merchants }: BrandWallProps) {
                     <p className="text-gray-600 mb-6">
                         Bergabunglah dengan ekosistem Kamalan dan hadirkan produk terbaik untuk pelanggan kami
                     </p>
-                    <button className="border border-[#889966] text-[#889966] hover:bg-[#889966] hover:text-[oklch(0.985_0_0)] font-semibold py-3 px-8 rounded-lg transition-all duration-200">
-                        Hubungi Kami
-                    </button>
+                    <a href={mailToLink} target="_blank" rel="noopener noreferrer">
+                        <button className="border border-[#889966] text-[#889966] hover:bg-[#889966] hover:text-[oklch(0.985_0_0)] font-semibold py-3 px-8 rounded-lg transition-all duration-200">
+                            Hubungi Kami
+                        </button>
+                    </a>
                 </div>
             </div>
         </section>

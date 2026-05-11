@@ -5,16 +5,24 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with(['event', 'categories', 'merchant'])->get();
+        $query = Product::with(['event', 'categories', 'merchant']);
+
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+
         return inertia('admin/products/index', [
-            'products' => $products,
+            'products' => $query->get(),
+            'filters'  => ['search' => $request->input('search', '')],
         ]);
     }
 
@@ -44,18 +52,23 @@ class ProductController extends Controller
             'category_ids' => 'required|array',
             'category_ids.*' => 'exists:categories,id',
             'merchant_id' => 'required|exists:merchants,id',
+            'image_urls' => 'nullable|array',
+            'image_urls.*' => 'string',
         ]);
         
         $validated['created_by'] = $request->user()->id;
-        
-        // Extract category_ids before creating product
         $categoryIds = $validated['category_ids'];
-        unset($validated['category_ids']);
+        $imageUrls = $validated['image_urls'] ?? [];
+        unset($validated['category_ids'], $validated['image_urls']);
         
-        $product = Product::create($validated);
-        
-        // Attach categories to product
-        $product->categories()->attach($categoryIds);
+        DB::transaction(function () use ($validated, $categoryIds, $imageUrls) {
+            $product = Product::create($validated);
+            $product->categories()->attach($categoryIds);
+            
+            foreach ($imageUrls as $order => $url) {
+                $product->productImages()->create(['image_url' => $url, 'order' => $order]);
+            }
+        });
         
         return redirect()->route('admin.products.index');
     }
@@ -76,8 +89,7 @@ class ProductController extends Controller
         $categories = \App\Models\Category::all();
         $merchants = \App\Models\Merchant::all();
         
-        // Load product with its categories
-        $product->load('categories');
+        $product->load(['categories', 'productImages']);
         
         return inertia('admin/products/edit', [
             'product' => $product,
@@ -100,16 +112,23 @@ class ProductController extends Controller
             'category_ids' => 'required|array',
             'category_ids.*' => 'exists:categories,id',
             'merchant_id' => 'required|exists:merchants,id',
+            'image_urls' => 'nullable|array',
+            'image_urls.*' => 'string',
         ]);
         
-        // Extract category_ids before updating product
         $categoryIds = $validated['category_ids'];
-        unset($validated['category_ids']);
+        $imageUrls = $validated['image_urls'] ?? [];
+        unset($validated['category_ids'], $validated['image_urls']);
         
-        $product->update($validated);
-        
-        // Sync categories (this will remove old ones and add new ones)
-        $product->categories()->sync($categoryIds);
+        DB::transaction(function () use ($product, $validated, $categoryIds, $imageUrls) {
+            $product->update($validated);
+            $product->categories()->sync($categoryIds);
+            
+            $product->productImages()->delete();
+            foreach ($imageUrls as $order => $url) {
+                $product->productImages()->create(['image_url' => $url, 'order' => $order]);
+            }
+        });
         
         return redirect()->route('admin.products.index');
     }

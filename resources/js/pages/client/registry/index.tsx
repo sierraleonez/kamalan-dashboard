@@ -23,7 +23,7 @@ export default function RegistryIndex({ registries }: Props) {
 
     return (
         <div className="min-h-screen bg-[oklch(1_0_0)]">
-            <Head title="My Registries - Kamalan" />
+            <Head title="Registry-Ku - Kamalan" />
             
             <Navbar />
             
@@ -31,9 +31,9 @@ export default function RegistryIndex({ registries }: Props) {
                 {/* Header */}
                 <div className="flex justify-between items-center mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold text-foreground">My Registries</h1>
+                        <h1 className="text-3xl font-bold text-foreground">Registry-Ku</h1>
                         <p className="text-muted-foreground mt-2">
-                            Manage and view all your gift registries
+                            Kelola semua registry milikmu
                         </p>
                     </div>
                     <button
@@ -41,7 +41,7 @@ export default function RegistryIndex({ registries }: Props) {
                         className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-md"
                     >
                         <Plus className="w-5 h-5" />
-                        Create New Registry
+                        Buat Registry Baru
                     </button>
                 </div>
 

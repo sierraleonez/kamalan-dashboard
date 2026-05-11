@@ -59,12 +59,12 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold text-gray-900">
-                        {isLogin ? 'Welcome Back' : 'Create Account'}
+                        {isLogin ? 'Halo!' : 'Buat Akun Baru'}
                     </DialogTitle>
                     <DialogDescription className="text-gray-600">
                         {isLogin 
-                            ? 'Sign in to create your gift registry' 
-                            : 'Join Kamalan to start creating your registry'
+                            ? 'Isi email dan sandi untuk buat Registry' 
+                            : 'Isi informasi di bawah ini'
                         }
                     </DialogDescription>
                 </DialogHeader>
@@ -75,7 +75,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
                     {!isLogin && (
                         <div>
                             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                                Full Name
+                                Nama Lengkap
                             </label>
                             <input
                                 type="text"
@@ -83,7 +83,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
                                 value={data.name}
                                 onChange={(e) => setData('name', e.target.value)}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#889966] focus:border-transparent"
-                                placeholder="Enter your full name"
+                                placeholder="Tulis namamu"
                                 required
                             />
                             {errors.name && (
@@ -95,7 +95,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
                     {/* Email Field */}
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                            Email Address
+                            Email
                         </label>
                         <input
                             type="email"
@@ -103,7 +103,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#889966] focus:border-transparent"
-                            placeholder="Enter your email"
+                            placeholder="Email"
                             required
                         />
                         {errors.email && (
@@ -123,7 +123,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
                                 value={data.password}
                                 onChange={(e) => setData('password', e.target.value)}
                                 className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#889966] focus:border-transparent"
-                                placeholder="Enter your password"
+                                placeholder="Password"
                                 required
                                 minLength={8}
                             />
@@ -144,7 +144,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
                     {!isLogin && (
                         <div>
                             <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-700 mb-1">
-                                Confirm Password
+                                Konfirmasi Password
                             </label>
                             <input
                                 type="password"
@@ -152,7 +152,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
                                 value={data.password_confirmation}
                                 onChange={(e) => setData('password_confirmation', e.target.value)}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#889966] focus:border-transparent"
-                                placeholder="Confirm your password"
+                                placeholder="Password"
                                 required
                             />
                             {errors.password_confirmation && (
@@ -168,8 +168,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
                         className="w-full bg-[#889966] text-[oklch(0.985_0_0)] py-2 px-4 rounded-md hover:bg-[#778855] focus:outline-none focus:ring-2 focus:ring-[#889966] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {processing 
-                            ? (isLogin ? 'Signing in...' : 'Creating account...') 
-                            : (isLogin ? 'Sign In' : 'Create Account')
+                            ? (isLogin ? 'Mencari datamu...' : 'Membuat akunmu...') 
+                            : (isLogin ? 'Masuk' : 'Buat Akun')
                         }
                     </button>
                 </form>
@@ -177,13 +177,13 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
                 {/* Switch Mode */}
                 <div className="mt-6 text-center">
                     <p className="text-sm text-gray-600">
-                        {isLogin ? "Don't have an account? " : "Already have an account? "}
+                        {isLogin ? "Belum punya akun? " : "Sudah punya akun? "}
                         <button
                             type="button"
                             onClick={switchMode}
                             className="text-[#889966] hover:text-[#778855] font-medium"
                         >
-                            {isLogin ? 'Create one' : 'Sign in'}
+                            {isLogin ? 'Buat Akun' : 'Masuk'}
                         </button>
                     </p>
                 </div>

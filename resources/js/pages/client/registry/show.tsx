@@ -51,7 +51,7 @@ export default function RegistryShow({ registry }: Props) {
                         className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-4"
                     >
                         <ArrowLeft className="w-4 h-4" />
-                        Back to My Registries
+                        Kembali ke Registry-Ku
                     </button>
                     
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
@@ -102,25 +102,25 @@ export default function RegistryShow({ registry }: Props) {
                     {/* Right Column - Additional Information */}
                     <div className="lg:col-span-2">
                         <div className="bg-card rounded-lg shadow-lg p-6 border border-border">
-                            <h2 className="text-2xl font-semibold mb-4">Registry Details</h2>
+                            <h2 className="text-2xl font-semibold mb-4">Detail Registry</h2>
                             
                             {/* Event Information */}
                             <div className="mb-6">
-                                <h3 className="text-lg font-medium mb-2">Event Information</h3>
+                                <h3 className="text-lg font-medium mb-2">Informasi Acara</h3>
                                 <div className="space-y-2 text-muted-foreground">
-                                    <p><span className="font-medium text-foreground">Event Type:</span> {registry.event.name}</p>
-                                    <p><span className="font-medium text-foreground">Date:</span> {registry.formatted_date}</p>
+                                    <p><span className="font-medium text-foreground">Jenis Acara</span> {registry.event.name}</p>
+                                    <p><span className="font-medium text-foreground">Tanggal</span> {registry.formatted_date}</p>
                                 </div>
                             </div>
                             
                             {/* Delivery Information */}
                             {registry.delivery_info && (
                                 <div className="mb-6">
-                                    <h3 className="text-lg font-medium mb-2">Delivery Information</h3>
+                                    <h3 className="text-lg font-medium mb-2">Informasi Pengiriman</h3>
                                     <div className="space-y-2 text-muted-foreground">
-                                        <p><span className="font-medium text-foreground">Recipient:</span> {registry.delivery_info.receiver_name}</p>
-                                        <p><span className="font-medium text-foreground">Phone:</span> {registry.delivery_info.phone_number}</p>
-                                        <p><span className="font-medium text-foreground">Address:</span> {registry.delivery_info.address}</p>
+                                        <p><span className="font-medium text-foreground">Penerima</span> {registry.delivery_info.receiver_name}</p>
+                                        <p><span className="font-medium text-foreground">Telepon</span> {registry.delivery_info.phone_number}</p>
+                                        <p><span className="font-medium text-foreground">Alamat</span> {registry.delivery_info.address}</p>
                                         <p className="text-sm">
                                             {registry.delivery_info.subdistrict}, {registry.delivery_info.district}, {registry.delivery_info.city}, {registry.delivery_info.province} {registry.delivery_info.postal_code}
                                         </p>
@@ -132,7 +132,7 @@ export default function RegistryShow({ registry }: Props) {
                             <div>
                                 <h3 className="text-lg font-medium mb-2">Gift Summary</h3>
                                 <p className="text-muted-foreground">
-                                    Total items in registry: <span className="font-semibold text-foreground">{registry.products.length}</span>
+                                    Jumlah hadiah di Registry <span className="font-semibold text-foreground">{registry.products.length}</span>
                                 </p>
                             </div>
                         </div>

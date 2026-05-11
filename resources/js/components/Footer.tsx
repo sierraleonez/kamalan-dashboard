@@ -58,12 +58,12 @@ export default function Footer() {
                             </li> */}
                             <li>
                                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                                    Privacy Policy
+                                    Kebijakan Privasi
                                 </a>
                             </li>
                             <li>
                                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                                    Terms of Service
+                                    Syarat & Ketentuan
                                 </a>
                             </li>
                         </ul>
@@ -73,13 +73,13 @@ export default function Footer() {
                     <div>
                         <h3 className="font-serif text-white text-xl font-bold mb-6">Social Media</h3>
                         <div className="flex space-x-4 mb-6">
-                            <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                            <a href="https://www.instagram.com/kamalan.registry/" target='_blank' className="text-gray-300 hover:text-white transition-colors">
                                 <Instagram className="w-6 h-6" />
                             </a>
-                            <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                            <a href="https://www.tiktok.com/@kamalan.id" className="text-gray-300 hover:text-white transition-colors">
                                 <img src="/images/icons/tiktok-icon.webp" alt="TikTok" className="w-6 h-6" />
                             </a>
-                            <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                            <a href="https://www.threads.com/@kamalan.id" className="text-gray-300 hover:text-white transition-colors">
                                 <img src="/images/icons/threads-icon.png" alt="Threads" className="w-6 h-6" />
                             </a>
                             
@@ -93,7 +93,7 @@ export default function Footer() {
                                 <Youtube className="w-6 h-6" />
                             </a> */}
                         </div>
-                        <ul className="space-y-3">
+                        {/* <ul className="space-y-3">
                             <li>
                                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
                                     @kamalan.id
@@ -104,7 +104,7 @@ export default function Footer() {
                                     Kamalan Official
                                 </a>
                             </li>
-                        </ul>
+                        </ul> */}
                     </div>
 
                     {/* Newsletter Section */}
@@ -150,7 +150,7 @@ export default function Footer() {
                         </div>
                         
                         <div className="flex items-center space-x-6 text-sm text-gray-400">
-                            <span>Made with ❤️ in Indonesia</span>
+                            {/* <span>Made with ❤️ in Indonesia</span> */}
                         </div>
                     </div>
                 </div>

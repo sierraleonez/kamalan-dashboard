@@ -141,7 +141,7 @@ function FilterSidebar({
     return (
         <div className="space-y-3">
             <div>
-                <h3 className="font-serif text-xl text-primary font-medium mb-3">Category</h3>
+                <h3 className="font-serif text-xl text-primary font-medium mb-3">Kategori</h3>
                 <div className="space-y-2">
                     {categories.map(category => (
                         <label key={category.id} className="flex items-center gap-x-2">

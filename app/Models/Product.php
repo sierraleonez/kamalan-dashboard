@@ -102,4 +102,9 @@ class Product extends Model
     {
         return $this->hasOne(FeaturedProduct::class);
     }
+
+    public function productImages()
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('order');
+    }
 }

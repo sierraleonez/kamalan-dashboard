@@ -45,7 +45,8 @@ export default function ArticleGrid({ articles }: ArticleGridProps) {
                         Catatan Kamalan
                     </h2>
                     <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                        Inspirasi dan panduan untuk menciptakan momen istimewa dalam setiap acara
+                        Inspirasi, tips, dan trik untuk membuat acaramu spesial dan dikenang selalu
+
                     </p>
                 </div>
 

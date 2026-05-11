@@ -10,8 +10,8 @@ import products from '@/routes/admin/products';
 import { formatRupiah } from '@/lib/currency';
 import Dropdown from '@/components/ui/dropdown';
 import admin from '@/routes/admin';
-import { Upload } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Upload, X, ArrowUp, ArrowDown } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MultiSelect } from '@/components/ui/multi-select';
 
 interface Category {
@@ -40,6 +40,7 @@ interface Product {
     merchant_id: number;
     enabled: boolean;
     categories?: Category[];
+    product_images?: { id: number; image_url: string; order: number }[];
 }
 
 interface Props {
@@ -52,6 +53,7 @@ interface Props {
 
 export default function ProductEdit({ product, events, categories, merchants, errors = {} }: Props) {
     const [imagePreview, setImagePreview] = useState<string | null>(product.display_image || null);
+    const isAdditionalUpload = useRef(false);
     const props = usePage().props;
     
     const { data, setData, put, processing } = useForm({
@@ -64,14 +66,16 @@ export default function ProductEdit({ product, events, categories, merchants, er
         category_ids: product.categories?.map(cat => cat.id) || [],
         merchant_id: product.merchant_id.toString(),
         enabled: product.enabled ?? true,
+        image_urls: product.product_images?.map(img => img.image_url) || [],
     });
 
     useEffect(() => {
         const flashData = props?.flash as { image_url?: string } | undefined;
-        if (flashData?.image_url) {
+        if (flashData?.image_url && !isAdditionalUpload.current) {
             setData('display_image', flashData.image_url);
             setImagePreview(flashData.image_url);
         }
+        isAdditionalUpload.current = false;
     }, [props?.flash]);
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,6 +93,37 @@ export default function ProductEdit({ product, events, categories, merchants, er
                 }
             });
         }
+    };
+
+    const handleAdditionalImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            isAdditionalUpload.current = true;
+            const formData = new FormData();
+            formData.append('image', file);
+            router.post(admin.uploadImage.url(), formData, {
+                preserveState: true,
+                onSuccess: (page) => {
+                    const flash = (page.props as any)?.flash as { image_url?: string } | undefined;
+                    if (flash?.image_url) {
+                        setData('image_urls', [...data.image_urls, flash.image_url]);
+                    }
+                }
+            });
+        }
+        e.target.value = '';
+    };
+
+    const removeImage = (index: number) => {
+        setData('image_urls', data.image_urls.filter((_, i) => i !== index));
+    };
+
+    const moveImage = (index: number, direction: -1 | 1) => {
+        const newUrls = [...data.image_urls];
+        const target = index + direction;
+        if (target < 0 || target >= newUrls.length) return;
+        [newUrls[index], newUrls[target]] = [newUrls[target], newUrls[index]];
+        setData('image_urls', newUrls);
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -170,6 +205,29 @@ export default function ProductEdit({ product, events, categories, merchants, er
                         <Input id="display_image" name="display_image" value={data.display_image} onChange={handleChange} placeholder="Or enter image URL" className="flex-1" />
                     </div>
                     <InputError message={errors.display_image?.[0]} />
+                </div>
+                <div className="grid gap-2">
+                    <Label>Additional Images</Label>
+                    {data.image_urls.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                            {data.image_urls.map((url, index) => (
+                                <div key={index} className="relative group w-24 h-24">
+                                    <img src={url} alt={`Image ${index + 1}`} className="w-full h-full object-cover rounded border" />
+                                    <div className="absolute top-0 right-0 flex gap-0.5">
+                                        <button type="button" onClick={() => moveImage(index, -1)} className="bg-black/60 text-white p-0.5 rounded-bl"><ArrowUp size={12} /></button>
+                                        <button type="button" onClick={() => moveImage(index, 1)} className="bg-black/60 text-white p-0.5"><ArrowDown size={12} /></button>
+                                        <button type="button" onClick={() => removeImage(index)} className="bg-red-600 text-white p-0.5 rounded-tr"><X size={12} /></button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <label className="cursor-pointer inline-flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-md hover:bg-secondary/80 transition-colors whitespace-nowrap w-fit">
+                        <Upload size={16} />
+                        Add Image
+                        <input type="file" accept="image/*" onChange={handleAdditionalImageUpload} className="sr-only" />
+                    </label>
+                    <InputError message={errors.image_urls?.[0]} />
                 </div>
                 <div className="grid gap-2">
                     <Label htmlFor="price">Price (IDR)</Label>

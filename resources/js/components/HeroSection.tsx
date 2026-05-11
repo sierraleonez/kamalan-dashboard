@@ -36,7 +36,7 @@ export default function HeroSection({ onClickCreateRegistry }: HeroSectionProps)
             {/* Hero Image */}
             <div className="relative h-[60vh] md:h-[70vh] overflow-hidden">
                 <img
-                    src="/images/baby-shower.jpg"
+                    src="/images/hero_image.webp"
                     alt="Artisanal gift collection"
                     className="w-full h-full object-cover"
                 />

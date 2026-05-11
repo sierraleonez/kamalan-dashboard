@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import MinimalTable from '@/components/minimal-table';
 import AppLayout from '@/layouts/app-layout';
 import productsRoute from '@/routes/admin/products';
 import { Trash2 } from 'lucide-react';
 import { router } from '@inertiajs/react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
+import debounce from 'lodash.debounce';
+import { Input } from '@/components/ui/input';
 
 type Product = {
     id: number;
@@ -19,11 +21,25 @@ type Product = {
 
 interface Props {
     products: Product[];
+    filters: { search?: string };
 }
 
-export default function ProductList({ products }: Props) {
+export default function ProductList({ products, filters }: Props) {
     const [deleteId, setDeleteId] = useState<number | null>(null);
     const [showConfirm, setShowConfirm] = useState(false);
+    const [search, setSearch] = useState(filters.search ?? '');
+
+    const debouncedSearch = useCallback(
+        debounce((value: string) => {
+            router.get(productsRoute.index().url, { search: value }, { preserveState: true, replace: true });
+        }, 400),
+        []
+    );
+
+    function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+        setSearch(e.target.value);
+        debouncedSearch(e.target.value);
+    }
 
     function onConfirmDelete() {
         if (deleteId) {
@@ -55,6 +71,12 @@ export default function ProductList({ products }: Props) {
                         Create Product
                     </a>
                 </div>
+                <Input
+                    placeholder="Search products..."
+                    value={search}
+                    onChange={handleSearch}
+                    className="max-w-sm"
+                />
                 <MinimalTable
                     redirectUrlFn={(p) => productsRoute.edit(p.id).url}
                     data={products.map((prod) => ({
