@@ -69,7 +69,9 @@ export default function ArticleShow({ article }: Props) {
                         <div className="mt-6">
                             <span className="font-semibold block mb-2">Content:</span>
                             <div data-color-mode="light" className="border rounded-md p-4">
-                                <MDEditor.Markdown source={article.body} />
+                                <MDEditor.Markdown
+                                    source={article.body}
+                                />
                             </div>
                         </div>
                     </CardContent>
