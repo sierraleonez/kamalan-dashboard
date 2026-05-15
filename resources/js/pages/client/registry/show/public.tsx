@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Navbar from "@/components/Navbar";
 import RegistryCard from "@/components/RegistryCard";
 import { ShareRegistryResponse } from "@/types/response";
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,6 +14,8 @@ interface PageProps {
 
 export default function PublicRegistry(props: PageProps) {
     const registryData = props?.registry;
+    const { auth } = usePage().props as any;
+    const isOwner = auth?.user?.id === registryData?.user_id;
     const [isCopied, setIsCopied] = useState(false);
 
     // Format delivery information
@@ -48,7 +50,7 @@ ${registryData.delivery_info.notes ? `\nCatatan: ${registryData.delivery_info.no
                     </p>
                 </div>
 
-                <RegistryCard showReserveButton={true} registryData={registryData} />
+                <RegistryCard showReserveButton={!isOwner} registryData={registryData} />
 
                 {/* Delivery Information Section */}
                 <div className="max-w-2xl mx-auto mt-8">

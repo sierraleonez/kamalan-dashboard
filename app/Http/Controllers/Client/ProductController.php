@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Merchant;
 use App\Models\Product;
 use App\Models\Registry;
 use Illuminate\Http\Request;
@@ -14,14 +16,33 @@ class ProductController extends Controller
     {
         $registry_id = $request->registry_id;
         $registry = null;
+        $categories_params = $request->input('categories');
+        $brands_params = $request->input('brands');
+        $search_params = $request->input('search');
+        $sort_params = $request->input('sort');
 
         if ($registry_id) {
             $registry = Registry::with('deliveryInfo')->find($registry_id);
         }
 
         return Inertia::render('client/product/index', [
-            'products' => Inertia::scroll(fn() => Product::where('enabled', true)->paginate(15)),
-            'registry' => $registry
+            'products' => Inertia::scroll(
+                fn() => Product::where('enabled', true)
+                    ->when($categories_params, fn($q, $v) => is_array($v) ? $q->whereIn('event_id', $v) : $q->where('event_id', $v))
+                    ->when($brands_params, fn($q, $v) => is_array($v) ? $q->whereIn('merchant_id', $v) : $q->where('merchant_id', $v))
+                    ->when($search_params, fn($q, $v) => $q->where('name', 'like', "%{$v}%"))
+                    ->when($sort_params === 'price_asc', fn($q) => $q->orderBy('price', 'asc'))
+                    ->paginate(15)
+            ),
+            'registry' => $registry,
+            'categories' => Category::all(['id', 'name']),
+            'brands' => Merchant::all(['id', 'name']),
+            'filter' => [
+                'categories' => $categories_params,
+                'brands' => $brands_params,
+                'search' => $search_params,
+                'sort' => $sort_params,
+            ],
         ]);
     }
 

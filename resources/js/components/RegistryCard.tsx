@@ -34,8 +34,8 @@ export default function RegistryCard({ registryData, isMobile = false, showReser
     const [showReservationDialog, setShowReservationDialog] = useState(false);
 
     function openProductDetail(productId: number) {
-        const params = { query: { registry_id: registryData.id } };
-        const url = products.show(productId, params).url;
+        // const params = { query: { registry_id: registryData.id } };
+        const url = products.show(productId).url;
         window.open(url, '_blank');
     }
 
@@ -52,7 +52,6 @@ export default function RegistryCard({ registryData, isMobile = false, showReser
         });
         setShowReservationDialog(true);
     }
-
     if (isMobile) {
         return (
             <div className="max-w-sm mx-auto">
@@ -93,6 +92,7 @@ export default function RegistryCard({ registryData, isMobile = false, showReser
 
                             <div className="space-y-2">
                                 {registryData.products.map((item, index) => {
+
                                     const isReserved = !!item.pivot.reservation;
                                     return (
                                         <div
@@ -237,7 +237,7 @@ export default function RegistryCard({ registryData, isMobile = false, showReser
                                                 <div className="flex items-center gap-1 mt-1">
                                                     <Check className="w-3 h-3 text-green-600" />
                                                     <span className="text-xs text-green-600 font-medium">
-                                                        Reserved by {item.pivot.reservation?.display_name ?? 'anonymous'}
+                                                        Reserved by {item.pivot.reservation?.name ?? 'anonymous'}
                                                     </span>
                                                 </div>
                                             )}

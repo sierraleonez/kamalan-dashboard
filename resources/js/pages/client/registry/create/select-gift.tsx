@@ -34,6 +34,7 @@ interface PageProps {
         categories?: number[];
         brands?: number[];
         search?: string;
+        sort?: string;
     }
 }
 
@@ -50,6 +51,7 @@ export default function SelectGift({ products, registryId, categories, brands, f
         categories: number[];
         brands: number[];
         search: string;
+        sort: string;
     }>()
 
     useEffect(() => {
@@ -60,7 +62,7 @@ export default function SelectGift({ products, registryId, categories, brands, f
 
     // console.log(data)
 
-    function refetchProductsWithFilter(newData: { categories?: number[]; brands?: number[]; search?: string }) {
+    function refetchProductsWithFilter(newData: { categories?: number[]; brands?: number[]; search?: string; sort?: string }) {
         const query = newData
         router.get(
             selectGifts.url({query}),
@@ -77,7 +79,7 @@ export default function SelectGift({ products, registryId, categories, brands, f
         const isACategoryAlreadySelected =  initialCategories.includes(categoryId);
         if (!isACategoryAlreadySelected) {
             const newCategories = [...initialCategories, categoryId];
-            const query = { categories: newCategories, brands: data.brands || [] };
+            const query = { categories: newCategories, brands: data.brands || [], sort: data.sort };
             refetchProductsWithFilter(query);
             setData('categories', newCategories);
         }
@@ -85,8 +87,7 @@ export default function SelectGift({ products, registryId, categories, brands, f
 
     function removeCategoryFilter(categoryId: number) {
         const updatedCategories = data.categories.filter(id => String(id) !== String(categoryId));
-        const query = { categories: updatedCategories, brands: data.brands || [] };
-        console.log("Removing category filter - Updated Categories:", updatedCategories);
+        const query = { categories: updatedCategories, brands: data.brands || [], sort: data.sort };
         refetchProductsWithFilter(query);
         setData('categories', updatedCategories);
     }
@@ -95,7 +96,7 @@ export default function SelectGift({ products, registryId, categories, brands, f
         const initialBrands = data.brands || [];
         const isABrandAlreadySelected = initialBrands.includes(brandId);
         if (!isABrandAlreadySelected) {
-            const query = { categories: data.categories || [], brands: [...initialBrands, brandId] };
+            const query = { categories: data.categories || [], brands: [...initialBrands, brandId], sort: data.sort };
             refetchProductsWithFilter(query);
             setData('brands', [...initialBrands, brandId]);
         }
@@ -103,7 +104,7 @@ export default function SelectGift({ products, registryId, categories, brands, f
 
     function removeBrandFilter(brandId: number) {
         const updatedBrands = data.brands.filter(id => String(id) !== String(brandId));
-        const query = { categories: data.categories || [], brands: updatedBrands };
+        const query = { categories: data.categories || [], brands: updatedBrands, sort: data.sort };
         refetchProductsWithFilter(query);
         setData('brands', updatedBrands);
     }
@@ -111,7 +112,7 @@ export default function SelectGift({ products, registryId, categories, brands, f
     function addSearchFilter(searchTerm: string) {
         console.log('Adding search filter with term:', searchTerm);
         setData('search', searchTerm);
-        refetchProductsWithFilter({ categories: data.categories || [], brands: data.brands || [], search: searchTerm });
+        refetchProductsWithFilter({ categories: data.categories || [], brands: data.brands || [], search: searchTerm, sort: data.sort });
     }
 
     const debouncedAddSearchFilter = React.useCallback(debounce((value: string) => {
@@ -163,6 +164,11 @@ export default function SelectGift({ products, registryId, categories, brands, f
         }
     }
 
+    function handleSortChange(sort: string) {
+        setData('sort', sort);
+        refetchProductsWithFilter({ categories: data.categories || [], brands: data.brands || [], search: data.search, sort });
+    }
+
     return (
         <div className="min-h-screen bg-white">
             <Head title="Kamalan - Premium Gift Hampers" />
@@ -184,6 +190,7 @@ export default function SelectGift({ products, registryId, categories, brands, f
                         removeFilter={removeFilter}
                         showHero={true}
                         filterValues={data}
+                        onSortChange={handleSortChange}
                     />
                 </div>
 

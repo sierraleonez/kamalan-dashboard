@@ -71,7 +71,7 @@ export default function RegistryFormData(xprops: PageProps) {
             setData({...data, photo_url: props.flash.image_url});
         }
     }, [props?.flash?.image_url])
-    console.log(data.photo_url)
+
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -82,8 +82,6 @@ export default function RegistryFormData(xprops: PageProps) {
             const formData = new FormData();
             formData.append('registry_background_image', file);
             router.post(uploadFile.url(), formData, { onSuccess: (response) => {
-                // Handle successful upload if needed
-                console.log('Image uploaded successfully:', response);
             }})
         }
     };
@@ -203,7 +201,7 @@ export default function RegistryFormData(xprops: PageProps) {
                                     value={data.event_name}
                                     onChange={(e) => setData('event_name', e.target.value)}
                                     className="w-full px-3 py-2 border border-[oklch(0.922_0_0)] rounded-md focus:outline-none focus:ring-2 focus:ring-[#889966] focus:border-transparent"
-                                    placeholder="Pernikahan, Ulang Tahun, dll."
+                                    placeholder={data.event_name}
                                     required
                                 />
                                 {errors.event_name && (

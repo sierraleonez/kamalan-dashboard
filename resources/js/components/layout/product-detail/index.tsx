@@ -103,14 +103,14 @@ export default function ProductDetailLayout({
             </div>
             
             {/* Related Products Section */}
-            <div className="mt-16 border-t border-[oklch(0.922_0_0)] pt-12">
+            {/* <div className="mt-16 border-t border-[oklch(0.922_0_0)] pt-12">
                 <h2 className="font-serif text-2xl font-bold text-[oklch(0.145_0_0)] mb-6 text-center">
                     You might also like
                 </h2>
                 <div className="text-center text-gray-600">
                     <p>Related products section coming soon...</p>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

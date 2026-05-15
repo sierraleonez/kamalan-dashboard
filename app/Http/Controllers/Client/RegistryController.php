@@ -14,7 +14,7 @@ class RegistryController extends Controller
     public function index(Request $request)
     {
         $registries = Registry::where('user_id', $request->user()->id)
-            ->with(['event', 'deliveryInfo', 'products'])
+            ->with(['event', 'deliveryInfo', 'products' => fn($q) => $q->limit(3)])
             ->orderBy('date', 'desc')
             ->get();
 

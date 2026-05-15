@@ -48,7 +48,7 @@ export default function HeroSection({ onClickCreateRegistry }: HeroSectionProps)
                         <h1 className="font-serif text-white text-4xl md:text-6xl font-bold mb-4">
                             Baby Registry
                         </h1>
-                        <p className="text-lg text-white md:text-xl mb-8 max-w-2xl mx-auto">
+                        <p className="text-lg text-white font-bold md:text-xl mb-8 max-w-2xl mx-auto">
                             Wujudkan momen istimewa dengan koleksi hadiah pilihan yang dipersonalisasi untuk setiap acara
                         </p>
                         <button onClick={redirectToProducts} className="bg-[#889966] hover:bg-[#7A8A5C] text-[oklch(0.985_0_0)] font-semibold py-4 px-8 rounded-lg transition-all duration-200 hover:shadow-lg transform hover:scale-105">
@@ -70,9 +70,6 @@ export default function HeroSection({ onClickCreateRegistry }: HeroSectionProps)
                                         <IconComponent className="w-8 h-8" />
                                     </div>
                                     <div className="flex items-center justify-center mb-3">
-                                        <span className="bg-[#889966] text-[oklch(0.985_0_0)] w-8 h-8 rounded-full flex items-center justify-center font-bold text-lg mr-3">
-                                            {step.number}
-                                        </span>
                                         <h3 className="font-serif text-xl font-semibold text-[oklch(0.145_0_0)]">
                                             {step.title}
                                         </h3>

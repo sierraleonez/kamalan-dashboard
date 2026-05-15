@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Search, MapPin, Filter, ChevronDown, Plus } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import products from '@/routes/products';
@@ -244,11 +245,13 @@ export interface ProductListLayoutProps {
         categories: number[];
         brands: number[];
         search: string;
+        sort?: string;
     };
     categories?: Array<{ id: number; name: string }>;
     brands?: Array<{ id: number; name: string }>;
     addFilter?: (type: 'category' | 'brand' | 'search', id: number | string) => void;
     removeFilter?: (type: 'category' | 'brand' | 'search', id: number | string) => void;
+    onSortChange?: (sort: string) => void;
 }
 
 export default function ProductListLayout({
@@ -262,6 +265,7 @@ export default function ProductListLayout({
     addFilter = () => { },
     removeFilter = () => { },
     filterValues,
+    onSortChange = () => { },
     heroSlides = [
         "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&h=400&fit=crop",
         "https://images.unsplash.com/photo-1544427920-c49ccfb85579?w=1200&h=400&fit=crop",
@@ -359,9 +363,18 @@ export default function ProductListLayout({
                                 </Sheet>
                             )}
 
-                            <Button variant="outline" className="min-w-[120px] bg-primary text-white border-primary hover:bg-primary/90 focus:ring-primary/50">
-                                Sort By <ChevronDown className="w-4 h-4 ml-2" />
-                            </Button>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" className="min-w-[120px] bg-primary text-white border-primary hover:bg-primary/90 focus:ring-primary/50">
+                                        {filterValues?.sort === 'price_asc' ? 'Harga Terendah' : 'Sort By'} <ChevronDown className="w-4 h-4 ml-2" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem onSelect={() => onSortChange('price_asc')}>
+                                        Harga Terendah
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                     </div>
                 )}

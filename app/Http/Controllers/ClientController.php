@@ -145,6 +145,7 @@ class ClientController extends Controller
         $categories_params = $request->input(['categories']);
         $brands_params = $request->input(['brands']);
         $search_params = $request->input(['search']);
+        $sort_params = $request->input(['sort']);
         // Load existing cart items for this registry (only if user is authenticated)
         $cartItems = [];
 
@@ -181,6 +182,7 @@ class ClientController extends Controller
                 ->when($search_params, function($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
+                ->when($sort_params === 'price_asc', fn($q) => $q->orderBy('price', 'asc'))
                 ->paginate(15)
         );
 
@@ -193,7 +195,8 @@ class ClientController extends Controller
             'filter' => [
                 'categories' => $categories_params,
                 'brands' => $brands_params,
-                'search' => $search_params
+                'search' => $search_params,
+                'sort' => $sort_params,
             ]
         ]);
     }

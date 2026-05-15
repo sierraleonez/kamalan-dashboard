@@ -35,7 +35,6 @@ export default function ShowProduct({ product, registry, auth }: ShowProductProp
         
         // Show checkout dialog after adding to cart (only in registry view)
         if (isRegistryView) {
-            console.log("Product added to cart, showing checkout dialog...");
             setShowCheckoutDialog(true);
         }
     };
@@ -91,7 +90,7 @@ export default function ShowProduct({ product, registry, auth }: ShowProductProp
             </div>
 
             {/* Checkout Confirmation Dialog (Registry view only) */}
-            {isRegistryView && registry && (
+            {/* {isRegistryView && registry && (
                 <RegistryCheckoutDialog
                     open={showCheckoutDialog}
                     onOpenChange={setShowCheckoutDialog}
@@ -100,7 +99,7 @@ export default function ShowProduct({ product, registry, auth }: ShowProductProp
                     onProductClick={handleProductClick}
                     onContinue={handleCheckoutContinue}
                 />
-            )}
+            )} */}
         </div>
     )
 }

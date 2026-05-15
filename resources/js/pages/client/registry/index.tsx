@@ -18,7 +18,7 @@ export default function RegistryIndex({ registries }: Props) {
         router.visit(createRegistry.selectGifts.url());
     };
     const handleRegistryClick = (registryId: number) => {
-        router.visit(   myRegistriesshow.url(registryId));
+        router.visit(myRegistriesshow.url(registryId));
     };
 
     return (
