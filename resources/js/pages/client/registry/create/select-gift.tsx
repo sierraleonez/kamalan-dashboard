@@ -27,6 +27,7 @@ interface iPaginatedResponse<T> {
 interface PageProps {
     products: iPaginatedResponse<iProduct>;
     registryId?: number;
+    registry?: any;
     initialCartItems?: CartItem[];
     categories?: Array<{ id: number; name: string }>;
     brands?: Array<{ id: number; name: string }>;
@@ -39,13 +40,14 @@ interface PageProps {
 }
 
 
-export default function SelectGift({ products, registryId, categories, brands, filter, initialCartItems = [] }: PageProps) {
-    // console.log('filter:', filter);
+export default function SelectGift({ products, registryId, categories, brands, filter, registry, initialCartItems = [] }: PageProps) {
     const { auth } = usePage().props as any
     const user = auth?.user;
+    const isRegistryComplete = registry?.delivery_info
     const isAuthenticated = !!user;
     const userName = isAuthenticated ? user.name : null;
-    const registryTitle = userName ? `${userName}'s Registry` : 'Your Registry';
+    const defaultRegistryTitle = userName ? `${userName}'s Registry` : 'Your Registry';
+    const registryTitle = isRegistryComplete ? registry.name : defaultRegistryTitle
 
     const { setData, data, setDefaults } = useForm<{
         categories: number[];
@@ -59,8 +61,6 @@ export default function SelectGift({ products, registryId, categories, brands, f
             setData(filter)
         }
     }, [filter])
-
-    // console.log(data)
 
     function refetchProductsWithFilter(newData: { categories?: number[]; brands?: number[]; search?: string; sort?: string }) {
         const query = newData
@@ -110,7 +110,6 @@ export default function SelectGift({ products, registryId, categories, brands, f
     }
 
     function addSearchFilter(searchTerm: string) {
-        console.log('Adding search filter with term:', searchTerm);
         setData('search', searchTerm);
         refetchProductsWithFilter({ categories: data.categories || [], brands: data.brands || [], search: searchTerm, sort: data.sort });
     }
@@ -121,7 +120,6 @@ export default function SelectGift({ products, registryId, categories, brands, f
 
     
     function addFilter(type: 'category' | 'brand' | 'search', value: number | string) {
-        console.log(`Adding filter - Type: ${type}, Value: ${value}`);
         if (type === 'category') {
             addCategoryFilter(value as number);
         } else if (type === 'brand') {
@@ -151,7 +149,8 @@ export default function SelectGift({ products, registryId, categories, brands, f
     } = useRegistryCartHook({ 
         registryId, 
         initialCartItems: auth?.user ? initialCartItems : [],
-        user: auth?.user
+        user: auth?.user,
+        isRegistryComplete
     });
 
     function handleAddToCart(product: iProduct) {

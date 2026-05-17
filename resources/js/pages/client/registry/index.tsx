@@ -6,7 +6,6 @@ import RegistryCard from '@/components/RegistryCard';
 import { ShareRegistryResponse } from '@/types/response';
 import { Plus } from 'lucide-react';
 import createRegistry from '@/routes/create-registry';
-import myRegistries from '@/routes/registry/index';
 import { myRegistriesshow } from '@/routes';
 
 interface Props {
@@ -24,9 +23,9 @@ export default function RegistryIndex({ registries }: Props) {
     return (
         <div className="min-h-screen bg-[oklch(1_0_0)]">
             <Head title="Registry-Ku - Kamalan" />
-            
+
             <Navbar />
-            
+
             <main className="container mx-auto px-4 py-8">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-8">
@@ -93,7 +92,7 @@ export default function RegistryIndex({ registries }: Props) {
                     </div>
                 )}
             </main>
-            
+
             <Footer />
         </div>
     );

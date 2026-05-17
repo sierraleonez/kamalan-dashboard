@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Head, router } from '@inertiajs/react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import RegistryCard from '@/components/RegistryCard';
 import { ShareRegistryResponse } from '@/types/response';
-import { ArrowLeft, Edit, Share2, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Edit, Share2, ExternalLink, Trash2 } from 'lucide-react';
 import { myRegistriesindex } from '@/routes';
+import { addGiftToCart } from '@/actions/App/Http/Controllers/Client/RegistryGiftCartController';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
 
 
 interface Props {
@@ -13,6 +15,9 @@ interface Props {
 }
 
 export default function RegistryShow({ registry }: Props) {
+    const isRegistryComplete = registry.delivery_info !== null;
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
     const handleBack = () => {
         router.visit(myRegistriesindex().url);
     };
@@ -37,12 +42,19 @@ export default function RegistryShow({ registry }: Props) {
         }
     };
 
+    function handleDeleteRegistryItem(productId: number, registryId: number) {
+        router.delete(addGiftToCart.url(), {
+            data: { product_id: productId, registry_id: registryId },
+            preserveScroll: true,
+        });
+    }
+
     return (
         <div className="min-h-screen bg-[oklch(1_0_0)]">
             <Head title={`${registry.name} - My Registries`} />
-            
+
             <Navbar />
-            
+
             <main className="container mx-auto px-4 py-8">
                 {/* Header */}
                 <div className="mb-8">
@@ -53,40 +65,44 @@ export default function RegistryShow({ registry }: Props) {
                         <ArrowLeft className="w-4 h-4" />
                         Kembali ke Registry-Ku
                     </button>
-                    
+
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                         <div>
                             <h1 className="text-3xl font-bold text-foreground">{registry.name}</h1>
-                            <p className="text-muted-foreground mt-2">
-                                Event: {registry.event.name} • Date: {registry.formatted_date}
-                            </p>
                         </div>
-                        
+
                         <div className="flex gap-2">
-                            {registry.magic_link && (
+                            {isRegistryComplete && (
                                 <>
                                     <button
                                         onClick={handleViewPublic}
                                         className="inline-flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors"
                                     >
                                         <ExternalLink className="w-4 h-4" />
-                                        View Public
+                                        Pratinjau
                                     </button>
                                     <button
                                         onClick={handleShare}
                                         className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
                                     >
                                         <Share2 className="w-4 h-4" />
-                                        Share
+                                        Bagikan
+                                    </button>
+                                    <button
+                                        onClick={handleEdit}
+                                        className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/80 transition-colors"
+                                    >
+                                        <Edit className="w-4 h-4" />
+                                        Edit
                                     </button>
                                 </>
                             )}
                             <button
-                                onClick={handleEdit}
-                                className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/80 transition-colors"
+                                onClick={() => setShowDeleteDialog(true)}
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
                             >
-                                <Edit className="w-4 h-4" />
-                                Edit
+                                <Trash2 className="w-4 h-4" />
+                                Hapus
                             </button>
                         </div>
                     </div>
@@ -96,14 +112,18 @@ export default function RegistryShow({ registry }: Props) {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Left Column - Registry Card */}
                     <div className="lg:col-span-1">
-                        <RegistryCard registryData={registry} />
+                        <RegistryCard
+                            showUpdateWishlistButton
+                            showDeleteItemButton
+                            onDeleteItem={(productId) => handleDeleteRegistryItem(productId, registry.id)} registryData={registry}
+                        />
                     </div>
-                    
+
                     {/* Right Column - Additional Information */}
                     <div className="lg:col-span-2">
                         <div className="bg-card rounded-lg shadow-lg p-6 border border-border">
                             <h2 className="text-2xl font-semibold mb-4">Detail Registry</h2>
-                            
+
                             {/* Event Information */}
                             <div className="mb-6">
                                 <h3 className="text-lg font-medium mb-2">Informasi Acara</h3>
@@ -112,7 +132,7 @@ export default function RegistryShow({ registry }: Props) {
                                     <p><span className="font-medium text-foreground">Tanggal</span> {registry.formatted_date}</p>
                                 </div>
                             </div>
-                            
+
                             {/* Delivery Information */}
                             {registry.delivery_info && (
                                 <div className="mb-6">
@@ -127,7 +147,7 @@ export default function RegistryShow({ registry }: Props) {
                                     </div>
                                 </div>
                             )}
-                            
+
                             {/* Products Summary */}
                             <div>
                                 <h3 className="text-lg font-medium mb-2">Gift Summary</h3>
@@ -139,8 +159,28 @@ export default function RegistryShow({ registry }: Props) {
                     </div>
                 </div>
             </main>
-            
+
             <Footer />
+
+            <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Hapus Registry</DialogTitle>
+                        <DialogDescription>Apakah kamu yakin ingin menghapus registry ini? Tindakan ini tidak dapat dibatalkan.</DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <button className="px-4 py-2 text-sm rounded-lg border">Batal</button>
+                        </DialogClose>
+                        <button
+                            onClick={() => router.delete(`/my-registries/${registry.id}`)}
+                            className="px-4 py-2 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600"
+                        >
+                            Hapus
+                        </button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

@@ -28,6 +28,11 @@ Route::resource('products', ProductController::class);
 Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
 Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
 
+// Static pages
+Route::get('/faq', fn() => inertia('client/static/faq'))->name('faq');
+Route::get('/kebijakan-privasi', fn() => inertia('client/static/privacy-policy'))->name('privacy-policy');
+Route::get('/syarat-ketentuan', fn() => inertia('client/static/terms'))->name('terms');
+
 // Merchant routes
 Route::get('/merchant/{merchant}', [MerchantController::class, 'show'])->name('merchant.show');
 
@@ -45,6 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('my-registries')->name('my-registries')->group(function () {
         Route::get('/', [RegistryController::class, 'index'])->name('index');
         Route::get('/{registry}', [RegistryController::class, 'show'])->name('show');
+        Route::delete('/{registry}', [RegistryController::class, 'destroy'])->name('destroy');
     });
     Route::prefix('create-registry')->name('create-registry.')->group(function () {
 

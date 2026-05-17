@@ -148,11 +148,17 @@ class ClientController extends Controller
         $sort_params = $request->input(['sort']);
         // Load existing cart items for this registry (only if user is authenticated)
         $cartItems = [];
+        $registry = null;
 
         $categories = Category::all(['id', 'name']);
         $brands = Merchant::all(['id', 'name']);
 
         if ($user && $registryId) {
+            $registry = Registry::where('id', $registryId)
+                ->where('user_id', $user->id)
+                ->with('deliveryInfo')
+                ->first();
+
             $cartItems = \App\Models\RegistryGiftCart::where('registry_id', $registryId)
                 ->with('product')
                 ->get()
@@ -190,6 +196,7 @@ class ClientController extends Controller
             'products' => $products,
             'registryId' => $registryId,
             'initialCartItems' => $cartItems,
+            'registry' => $registry,
             'categories' => $categories,
             'brands' => $brands,
             'filter' => [

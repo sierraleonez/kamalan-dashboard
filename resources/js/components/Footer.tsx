@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from '@inertiajs/react';
 import { Heart, Instagram, Twitter, Facebook, Youtube, Mail } from 'lucide-react';
 
 export default function Footer() {
@@ -47,9 +48,9 @@ export default function Footer() {
                         <h3 className="font-serif text-white text-xl font-bold mb-6">Informasi</h3>
                         <ul className="space-y-3">
                             <li>
-                                <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                                <Link href="/faq" className="text-gray-300 hover:text-white transition-colors">
                                     FAQ
-                                </a>
+                                </Link>
                             </li>
                             {/* <li>
                                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
@@ -57,14 +58,14 @@ export default function Footer() {
                                 </a>
                             </li> */}
                             <li>
-                                <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                                <Link href="/kebijakan-privasi" className="text-gray-300 hover:text-white transition-colors">
                                     Kebijakan Privasi
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                                <Link href="/syarat-ketentuan" className="text-gray-300 hover:text-white transition-colors">
                                     Syarat & Ketentuan
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </div>

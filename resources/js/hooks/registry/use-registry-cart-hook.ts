@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { router } from '@inertiajs/react';
 import { addGiftToCart, deliveryData, storeRegistry, selectGifts } from '@/routes/create-registry';
+import { myRegistriesindex, myRegistriesshow } from '@/routes';
 
 export interface CartItem {
     id: number;
@@ -30,9 +31,10 @@ interface UseCartHookProps {
     registryId?: number;
     initialCartItems?: CartItem[];
     user?: User;
+    isRegistryComplete: boolean
 }
 
-export function useRegistryCartHook({ registryId: initialRegistryId, initialCartItems = [], user }: UseCartHookProps) {
+export function useRegistryCartHook({ registryId: initialRegistryId, isRegistryComplete, initialCartItems = [], user }: UseCartHookProps) {
     const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems);
     const [registryId, setRegistryId] = useState<number | undefined>(initialRegistryId);
     const [pendingProductProcessed, setPendingProductProcessed] = useState(false);
@@ -59,8 +61,6 @@ export function useRegistryCartHook({ registryId: initialRegistryId, initialCart
                 image: product.display_image
             }];
         });
-
-        console.log('Adding to cart with registry ID:', currentRegistryId);
 
         // Send to backend with the registry ID
         router.post(addGiftToCart.url(), {
@@ -147,7 +147,13 @@ export function useRegistryCartHook({ registryId: initialRegistryId, initialCart
 
     const handleContinue = () => {
         // Navigate to next step in registry creation
-        router.visit(deliveryData.url({ query: { registry: registryId } }));
+        // const isRegistryComplete = registry
+        if (isRegistryComplete) {
+            router.visit(myRegistriesshow.url(registryId))
+        } else {
+            router.visit(deliveryData.url({ query: { registry: registryId } }));
+
+        }
     };
 
     // Clear cart data when user logs out

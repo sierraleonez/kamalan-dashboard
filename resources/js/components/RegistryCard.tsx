@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
-import { Calendar, Heart, Gift, Check } from 'lucide-react';
+import { Calendar, Heart, Gift, Check, Trash2 } from 'lucide-react';
 import { ShareRegistryResponse } from '@/types/response';
 import { router } from '@inertiajs/react';
 import products from '@/routes/products';
+import { deliveryData, selectGifts } from '@/routes/create-registry';
 import ReservationDialog from '@/components/ReservationDialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
 
 interface WishListItem {
     id: number;
@@ -27,11 +29,15 @@ interface RegistryCardProps {
     registryData: ShareRegistryResponse;
     isMobile?: boolean;
     showReserveButton?: boolean;
+    showDeleteItemButton?: boolean;
+    onDeleteItem?: (productId: number) => void;
+    showUpdateWishlistButton?: boolean
 }
 
-export default function RegistryCard({ registryData, isMobile = false, showReserveButton = false }: RegistryCardProps) {
+export default function RegistryCard({ registryData, isMobile = false, showReserveButton = false, showDeleteItemButton = false, onDeleteItem, showUpdateWishlistButton }: RegistryCardProps) {
     const [selectedGiftCart, setSelectedGiftCart] = useState<any | null>(null);
     const [showReservationDialog, setShowReservationDialog] = useState(false);
+    const [deleteItemId, setDeleteItemId] = useState<number | null>(null);
 
     function openProductDetail(productId: number) {
         // const params = { query: { registry_id: registryData.id } };
@@ -140,11 +146,40 @@ export default function RegistryCard({ registryData, isMobile = false, showReser
                                                 }
                                             </div>
 
+                                            {showDeleteItemButton && registryData.products.length > 1 && (
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); setDeleteItemId(item.id); }}
+                                                    className="flex-shrink-0 p-1 text-red-500 hover:text-red-700 transition-colors"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            )}
+
                                         </div>
                                     );
                                 })}
                             </div>
                         </div>
+
+                        {!registryData.delivery_info && (
+                            <button
+                                onClick={() => router.visit(deliveryData({ query: { registry: registryData.id } }).url)}
+                                className="bg-[#889966] hover:bg-[#7A8A5C] text-[oklch(0.985_0_0)] font-semibold py-4 px-8 rounded-lg transition-all duration-200 hover:shadow-lg transform hover:scale-105"
+                            >
+                                Lengkapi Registry
+                            </button>
+                        )}
+                        {
+                            showUpdateWishlistButton && (
+                                <button
+                                    onClick={() => router.visit(selectGifts({ query: { registry: registryData.id } }).url)}
+                                    className="w-full bg-[#889966] hover:bg-[#7A8A5C] text-[oklch(0.985_0_0)] font-semibold py-4 px-8 rounded-lg transition-all duration-200 hover:shadow-lg transform hover:scale-105"
+                                >
+                                    Ubah Wishlist
+                                </button>
+
+                            )
+                        }
                     </div>
                 </Card>
 
@@ -156,6 +191,26 @@ export default function RegistryCard({ registryData, isMobile = false, showReser
                         giftCartItem={selectedGiftCart}
                     />
                 )}
+
+                <Dialog open={deleteItemId !== null} onOpenChange={(open) => { if (!open) setDeleteItemId(null); }}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Hapus Item</DialogTitle>
+                            <DialogDescription>Apakah kamu yakin ingin menghapus item ini dari registry?</DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <button className="px-4 py-2 text-sm rounded-lg border">Batal</button>
+                            </DialogClose>
+                            <button
+                                onClick={() => { if (deleteItemId) onDeleteItem?.(deleteItemId); setDeleteItemId(null); }}
+                                className="px-4 py-2 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600"
+                            >
+                                Hapus
+                            </button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
         );
     }
@@ -242,11 +297,44 @@ export default function RegistryCard({ registryData, isMobile = false, showReser
                                                 </div>
                                             )}
                                         </div>
+
+                                        {showDeleteItemButton && registryData.products.length > 1 && (
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); setDeleteItemId(item.id); }}
+                                                className="flex-shrink-0 p-1 text-red-500 hover:text-red-700 transition-colors"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        )}
                                     </div>
                                 );
                             })}
                         </div>
                     </div>
+
+                    {!registryData.delivery_info && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                router.visit(deliveryData({ query: { registry: registryData.id } }).url)
+                            }
+                            }
+                            className="w-full bg-[#889966] hover:bg-[#7A8A5C] text-[oklch(0.985_0_0)] font-semibold py-4 px-8 rounded-lg transition-all duration-200 hover:shadow-lg transform hover:scale-105"
+                        >
+                            Lengkapi Registry
+                        </button>
+                    )}
+                    {
+                        showUpdateWishlistButton && (
+                            <button
+                                onClick={() => router.visit(selectGifts({ query: { registry: registryData.id } }).url)}
+                                className="w-full bg-[#889966] hover:bg-[#7A8A5C] text-[oklch(0.985_0_0)] font-semibold py-4 px-8 rounded-lg transition-all duration-200 hover:shadow-lg transform hover:scale-105"
+                            >
+                                Ubah Wishlist
+                            </button>
+
+                        )
+                    }
                 </div>
             </Card>
 
@@ -258,6 +346,26 @@ export default function RegistryCard({ registryData, isMobile = false, showReser
                     giftCartItem={selectedGiftCart}
                 />
             )}
+
+            <Dialog open={deleteItemId !== null} onOpenChange={(open) => { if (!open) setDeleteItemId(null); }}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Hapus Item</DialogTitle>
+                        <DialogDescription>Apakah kamu yakin ingin menghapus item ini dari registry?</DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <button className="px-4 py-2 text-sm rounded-lg border">Batal</button>
+                        </DialogClose>
+                        <button
+                            onClick={() => { if (deleteItemId) onDeleteItem?.(deleteItemId); setDeleteItemId(null); }}
+                            className="px-4 py-2 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600"
+                        >
+                            Hapus
+                        </button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

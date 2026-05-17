@@ -74,4 +74,15 @@ class RegistryController extends Controller
         // Otherwise redirect to the next step
         return redirect()->route('create-registry.select-gifts', ['registry' => $registry->id]);
     }
+
+    public function destroy(Request $request, Registry $registry)
+    {
+        if ($registry->user_id !== $request->user()->id) {
+            abort(403);
+        }
+
+        $registry->delete();
+
+        return redirect()->route('my-registriesindex');
+    }
 }
