@@ -28,7 +28,7 @@ class ProductController extends Controller
         return Inertia::render('client/product/index', [
             'products' => Inertia::scroll(
                 fn() => Product::where('enabled', true)
-                    ->when($categories_params, fn($q, $v) => is_array($v) ? $q->whereIn('event_id', $v) : $q->where('event_id', $v))
+                    ->when($categories_params, fn($q, $v) => $q->whereHas('categories', fn($c) => $c->whereIn('categories.id', (array) $v)))
                     ->when($brands_params, fn($q, $v) => is_array($v) ? $q->whereIn('merchant_id', $v) : $q->where('merchant_id', $v))
                     ->when($search_params, fn($q, $v) => $q->where('name', 'like', "%{$v}%"))
                     ->when($sort_params === 'price_asc', fn($q) => $q->orderBy('price', 'asc'))

@@ -176,9 +176,10 @@ class ClientController extends Controller
         $products = Inertia::scroll(
             fn() => Product::where('enabled', true)
                 ->when($categories_params, function ($query, $category) {
-                    return is_array($category)
-                        ? $query->whereIn('event_id', $category)
-                        : $query->where('event_id', $category);
+                    return $query->whereHas('categories', fn($c) => is_array($category)
+                        ? $c->whereIn('categories.id', $category)
+                        : $c->where('categories.id', $category)
+                    );
                 })
                 ->when($brands_params, function($query, $brand) {
                     return is_array($brand)
