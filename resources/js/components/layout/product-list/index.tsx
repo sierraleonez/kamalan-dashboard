@@ -141,7 +141,7 @@ function FilterSidebar({
     // console.log('Selected Categories Map:', categories);
     return (
         <div className="space-y-3">
-            <div>
+            <div className='px-3 lg:px-0'>
                 <h3 className="font-serif text-xl text-primary font-medium mb-3">Kategori</h3>
                 <div className="space-y-2">
                     {categories.map(category => (
@@ -149,11 +149,9 @@ function FilterSidebar({
                             <Checkbox
                                 checked={selectedCategoriesMap.has(String(category.id))}
                                 onCheckedChange={(checked) => {
-                                    console.log(`Category Checkbox Changed - ID: ${category.id}, Checked: ${checked}`);
                                     if (checked) {
                                         addFilter('category', category.id);
                                     } else {
-                                        console.log('removing')
                                         removeFilter('category', category.id);
                                     }
                             }} id={`category-${category.id}`} name={`category-${category.id}`} />
@@ -163,7 +161,7 @@ function FilterSidebar({
                 </div>
             </div>
 
-            <div>
+            <div className='px-3 lg:px-0'>
                 <h3 className="font-serif text-xl text-primary font-medium mb-3">Brand</h3>
                 <div className="space-y-2">
                     {brands.map(brand => (
@@ -171,7 +169,6 @@ function FilterSidebar({
                             <Checkbox
                                 checked={selectedBrandsMap.has(String(brand.id))}
                                 onCheckedChange={(checked) => {
-                                    console.log(`Brand Checkbox Changed - ID: ${brand.id}, Checked: ${checked}`);
                                     if (checked) {
                                         addFilter('brand', brand.id);
                                     } else {
@@ -351,7 +348,7 @@ export default function ProductListLayout({
                                         <SheetHeader>
                                             <SheetTitle className="font-serif">Filters</SheetTitle>
                                         </SheetHeader>
-                                        <div className="mt-6">
+                                        <div className="mt-3 overflow-y-scroll">
                                             <FilterSidebar
                                                 categories={categories}
                                                 brands={brands}

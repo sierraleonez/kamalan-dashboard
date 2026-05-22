@@ -176,7 +176,7 @@ export default function SelectGift({ products, registryId, categories, brands, f
             <Navbar showRegistryBreadcrumbs={auth?.user} currentRegistryStep={2} />
 
             {/* Main Content */}
-            <div className="max-w-screen-xl mx-auto flex gap-8 px-4 py-6">
+            <div className="max-w-screen-xl mx-auto flex lg:gap-8 px-4 py-6">
                 <div className="flex-1">
                     <ProductListLayout
                         categories={categories}

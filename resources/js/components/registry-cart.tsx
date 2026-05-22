@@ -157,7 +157,7 @@ export default function RegistryCart({
     return (
         <>
             {/* Desktop Cart - Fixed Position */}
-            <div className="hidden lg:block sticky right-8 top-32 w-60 h-[calc(100vh-200px)] z-40">
+            <div className="hidden lg:block sticky right-8 top-32 w-0 lg:w-60 h-[calc(100vh-200px)] z-40">
                 <div className="mb-6">
                     <h2 className="font-serif text-xl font-medium text-primary text-center">
                         {registryTitle}
