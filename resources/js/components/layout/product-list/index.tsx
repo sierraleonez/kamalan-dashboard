@@ -354,6 +354,7 @@ export default function ProductListLayout({
                                                 brands={brands}
                                                 addFilter={addFilter}
                                                 removeFilter={removeFilter}
+                                                filterValues={filterValues}
                                             />
                                         </div>
                                     </SheetContent>
