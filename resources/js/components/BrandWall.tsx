@@ -14,6 +14,7 @@ interface Merchant {
     shopee_link?: string;
     tokped_link?: string;
     merchant_icon_url?: string;
+    updated_at?: string;
 }
 
 interface BrandWallProps {
@@ -71,7 +72,7 @@ export default function BrandWall({ brands, merchants }: BrandWallProps) {
                                     <div className="text-center">
                                         <div className="w-32 h-24 rounded mx-auto mb-2 flex items-center justify-center">
                                             <img 
-                                                src={merchant.merchant_icon_url || '/images/icons/kama-love.svg'} 
+                                                src={`${merchant.merchant_icon_url || '/images/icons/kama-love.svg'}?v=${merchant.updated_at || ''}`} 
                                                 alt={`${merchant.name} icon`} 
                                                 className="object-contain max-w-full max-h-full"
                                             />
