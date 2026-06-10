@@ -26,7 +26,7 @@ interface Props {
 }
 
 export default function MerchantEdit({ merchant, errors = {} }: Props) {
-    const { flash } = usePage<{ flash: { iconUrl?: string } }>().props;
+    const { flash } = usePage<{ flash: { image_url?: string } }>().props;
     const [iconPreview, setIconPreview] = useState<string | null>(merchant.merchant_icon_url || null);
 
     const { data, setData, put, processing } = useForm({
@@ -39,9 +39,9 @@ export default function MerchantEdit({ merchant, errors = {} }: Props) {
     });
 
     useEffect(() => {
-        if (flash?.iconUrl) {
-            setData('merchant_icon_url', flash.iconUrl);
-            setIconPreview(flash.iconUrl);
+        if (flash?.image_url) {
+            setData('merchant_icon_url', flash.image_url);
+            setIconPreview(flash.image_url);
         }
     }, [flash]);
 
