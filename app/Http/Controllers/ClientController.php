@@ -151,7 +151,14 @@ class ClientController extends Controller
         $registry = null;
 
         $categories = Category::all(['id', 'name']);
-        $brands = Merchant::all(['id', 'name']);
+        // merchant all but order it from featured merchant first
+        $brands = Merchant::select('id', 'name')
+            ->selectRaw('EXISTS (
+                SELECT 1 FROM featured_merchants 
+                WHERE featured_merchants.merchant_id = merchants.id
+            ) as is_featured')
+            ->orderBy('is_featured', 'desc')
+            ->get();
 
         if ($user && $registryId) {
             $registry = Registry::where('id', $registryId)

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { InfiniteScroll, router, usePage } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -138,6 +138,7 @@ function FilterSidebar({
 }: FilterSidebarProps) {
     const selectedCategoriesMap = useMemo(() => new Map(filterValues?.categories?.map(id => [id, true])), [filterValues?.categories]);
     const selectedBrandsMap = useMemo(() => new Map(filterValues?.brands?.map(id => [id, true])), [filterValues?.brands]);
+    const [showAllBrands, setShowAllBrands] = useState(false)
     // console.log('Selected Categories Map:', categories);
     return (
         <div className="space-y-3">
@@ -154,7 +155,7 @@ function FilterSidebar({
                                     } else {
                                         removeFilter('category', category.id);
                                     }
-                            }} id={`category-${category.id}`} name={`category-${category.id}`} />
+                                }} id={`category-${category.id}`} name={`category-${category.id}`} />
                             <span className="text-sm">{category.name}</span>
                         </label>
                     ))}
@@ -164,7 +165,7 @@ function FilterSidebar({
             <div className='px-3 lg:px-0'>
                 <h3 className="font-serif text-xl text-primary font-medium mb-3">Brand</h3>
                 <div className="space-y-2">
-                    {brands.map(brand => (
+                    {brands.slice(0,showAllBrands ? brands.length : 10).map(brand => (
                         <label key={brand.id} className="flex items-center gap-x-2 ">
                             <Checkbox
                                 checked={selectedBrandsMap.has(String(brand.id))}
@@ -181,6 +182,14 @@ function FilterSidebar({
                             <span className="text-sm">{brand.name}</span>
                         </label>
                     ))}
+                    {brands.length > 10 && (
+                        <button
+                            onClick={() => setShowAllBrands(!showAllBrands)}
+                            className="text-primary text-sm font-medium"
+                        >
+                            {showAllBrands ? 'Show Less' : 'Show More'}
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -264,9 +273,9 @@ export default function ProductListLayout({
     filterValues,
     onSortChange = () => { },
     heroSlides = [
-        "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=1200&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1544427920-c49ccfb85579?w=1200&h=400&fit=crop",
-        "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=1200&h=400&fit=crop"
+        "/images/slider/slider-1.webp",
+        "/images/slider/slider-2.webp",
+        "/images/slider/slider-3.webp"
     ],
     showFilters = true,
     showSearch = true
@@ -293,33 +302,12 @@ export default function ProductListLayout({
             <main className="flex-1">
                 {/* Hero Carousel */}
                 {showHero && (
-                    <div className="relative mb-8 rounded-xl overflow-hidden">
-                        <div className="aspect-[3/1] bg-gradient-to-r from-[#A3B18A] to-[#88A25B]">
-                            <img
-                                src={heroSlides[currentSlide]}
-                                alt="Hero Banner"
-                                className="w-full h-full object-cover opacity-80"
-                            />
-                            <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                                <div className="text-center text-white px-4">
-                                    <h1 className="font-serif text-white text-2xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">Premium Gift Hampers</h1>
-                                    <p className="text-sm md:text-lg lg:text-xl text-white">Curated with love for your special moments</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Carousel pagination */}
-                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                            {heroSlides.map((_, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => setCurrentSlide(index)}
-                                    className={`w-2 h-2 rounded-full transition-colors ${index === currentSlide ? 'bg-white' : 'bg-white/50'
-                                        }`}
-                                />
-                            ))}
-                        </div>
-                    </div>
+                    <Carousel
+                        slides={heroSlides}
+                        currentSlide={currentSlide}
+                        setCurrentSlide={setCurrentSlide}
+                        show={showHero}
+                    />
                 )}
 
                 {/* Search & Sort */}
@@ -420,6 +408,47 @@ function SearchBox({ value, onChange }: SearchBoxProps) {
                 className="pl-10 border-primary"
             />
 
+        </div>
+    )
+}
+
+function Carousel({ slides, currentSlide, setCurrentSlide, show }: { slides: string[]; currentSlide: number; setCurrentSlide: (index: number) => void; show: boolean }) {
+    useEffect(() => {
+        if (!show) return;
+        const slideInterval = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % slides.length);
+        }, 5000);
+        return () => clearInterval(slideInterval);
+    }, [slides.length, setCurrentSlide]);
+
+    if (!show) return null;
+    return (
+        <div className="relative mb-8 rounded-xl overflow-hidden">
+            <div className="aspect-[3/1] bg-gradient-to-r from-[#A3B18A] to-[#88A25B]">
+                <img
+                    src={slides[currentSlide]}
+                    alt="Hero Banner"
+                    className="w-full h-full object-cover opacity-80"
+                />
+                <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                    <div className="text-center text-white px-4">
+                        <h1 className="font-serif text-white text-2xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">Premium Gift Hampers</h1>
+                        <p className="text-sm md:text-lg lg:text-xl text-white">Curated with love for your special moments</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Carousel pagination */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {slides.map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => setCurrentSlide(index)}
+                        className={`w-2 h-2 rounded-full transition-colors ${index === currentSlide ? 'bg-white' : 'bg-white/50'
+                            }`}
+                    />
+                ))}
+            </div>
         </div>
     )
 }
