@@ -13,19 +13,29 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # 1. Setup Node & Build React Assets
+    # 1. Setup PHP & Composer Dependencies (Required for Wayfinder)
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3' # Match your local/production PHP version
+        extensions: mbstring, bcmath, ctype, fileinfo, json, openssl, pdo, pdo_mysql, tokenizer, xml
+
+    - name: Install Composer Dependencies
+      run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --optimize-autoloader
+
+    # 2. Setup Node & Build React Assets
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '22'
 
-    - name: Install NPM Dependencies
-      run: npm ci
+    - name: Install NPM Dependencies (Clean Install)
+      run: npm ci # <-- Switched back to the faster, strict clean install!
 
-    - name: Build Inertia Static Assets
+    - name: Build Inertia Static Assets (Wayfinder can now safely call php artisan)
       run: npm run build # Creates public/build
 
-    # 2. Upload the 'public/build' directory as a GitHub Artifact
+    # 3. Upload the 'public/build' directory as a GitHub Artifact
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -33,7 +43,7 @@ jobs:
         path: public/build/
         retention-days: 1
 
-    # 3. SSH into your server, pull Git code, and fetch the artifact
+    # 4. SSH into your server, pull Git code, and fetch the artifact
     - name: Execute Remote Deployment via SSH
       uses: appleboy/ssh-action@v1.0.3
       env:
@@ -71,7 +81,7 @@ jobs:
 
           # Extract assets directly into your public/build folder and clean up zip files
           unzip -o assets.zip -d public/build/
-          cp public/build ./
+          cp public/build ./build
           rm assets.zip artifacts.json
 
           # Run standard production optimizations
