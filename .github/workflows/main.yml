@@ -17,7 +17,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.3' # Match your local/production PHP version
+        php-version: '8.4' # Match your local/production PHP version
         extensions: mbstring, bcmath, ctype, fileinfo, json, openssl, pdo, pdo_mysql, tokenizer, xml
 
     - name: Install Composer Dependencies
