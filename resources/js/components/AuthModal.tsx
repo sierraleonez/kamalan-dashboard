@@ -8,6 +8,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { request } from '@/routes/password';
 
 interface AuthModalProps {
     isOpen: boolean;
@@ -30,9 +31,9 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         const endpoint = isLogin ? '/login' : '/register';
-        
+
         post(endpoint, {
             onSuccess: () => {
                 reset();
@@ -62,8 +63,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
                         {isLogin ? 'Halo!' : 'Buat Akun Baru'}
                     </DialogTitle>
                     <DialogDescription className="text-gray-600">
-                        {isLogin 
-                            ? 'Isi email dan sandi untuk buat Registry' 
+                        {isLogin
+                            ? 'Isi email dan sandi untuk buat Registry'
                             : 'Isi informasi di bawah ini'
                         }
                     </DialogDescription>
@@ -167,8 +168,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
                         disabled={processing}
                         className="w-full bg-[#889966] text-[oklch(0.985_0_0)] py-2 px-4 rounded-md hover:bg-[#778855] focus:outline-none focus:ring-2 focus:ring-[#889966] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {processing 
-                            ? (isLogin ? 'Mencari datamu...' : 'Membuat akunmu...') 
+                        {processing
+                            ? (isLogin ? 'Mencari datamu...' : 'Membuat akunmu...')
                             : (isLogin ? 'Masuk' : 'Buat Akun')
                         }
                     </button>
@@ -186,6 +187,13 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
                             {isLogin ? 'Buat Akun' : 'Masuk'}
                         </button>
                     </p>
+                    <a
+                        type="button"
+                        href={request().url}
+                        className="text-[#889966] text-sm hover:text-[#778855] font-medium"
+                    >
+                        Lupa Password?
+                    </a>
                 </div>
             </DialogContent>
         </Dialog>
