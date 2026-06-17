@@ -197,6 +197,7 @@ class ClientController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->when($sort_params === 'price_asc', fn($q) => $q->orderBy('price', 'asc'))
+                ->when($sort_params === 'price_desc', fn($q) => $q->orderBy('price', 'desc'))
                 ->paginate(15)
         );
 

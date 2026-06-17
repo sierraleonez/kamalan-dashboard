@@ -352,12 +352,15 @@ export default function ProductListLayout({
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="outline" className="min-w-[120px] bg-primary text-white border-primary hover:bg-primary/90 focus:ring-primary/50">
-                                        {filterValues?.sort === 'price_asc' ? 'Harga Terendah' : 'Sort By'} <ChevronDown className="w-4 h-4 ml-2" />
+                                        {filterValues?.sort === 'price_asc' ? 'Harga Terendah' : 'Urutkan'} <ChevronDown className="w-4 h-4 ml-2" />
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
                                     <DropdownMenuItem onSelect={() => onSortChange('price_asc')}>
                                         Harga Terendah
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onSelect={() => onSortChange('price_desc')}>
+                                        Harga Tertinggi
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
@@ -402,7 +405,7 @@ function SearchBox({ value, onChange }: SearchBoxProps) {
         <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
-                placeholder="Search for hampers, gifts, brands..."
+                placeholder="Cari hampers, gifts, brands disini"
                 defaultValue={value}
                 onChange={(e) => onChange(e.target.value)}
                 className="pl-10 border-primary"

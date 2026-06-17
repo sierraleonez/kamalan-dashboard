@@ -19,7 +19,7 @@ export default function ProductDescription({ description }: ProductDescriptionPr
         <div className="space-y-6 border-t border-[oklch(0.922_0_0)] pt-6">
             <div>
                 <h2 className="font-serif text-xl font-semibold text-[oklch(0.145_0_0)] mb-3">
-                    Product Description
+                    Deskripsi Produk
                 </h2>
                 <p className="text-gray-700 leading-relaxed">
                     {description || defaultDescription}

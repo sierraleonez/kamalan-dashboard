@@ -32,6 +32,7 @@ class ProductController extends Controller
                     ->when($brands_params, fn($q, $v) => is_array($v) ? $q->whereIn('merchant_id', $v) : $q->where('merchant_id', $v))
                     ->when($search_params, fn($q, $v) => $q->where('name', 'like', "%{$v}%"))
                     ->when($sort_params === 'price_asc', fn($q) => $q->orderBy('price', 'asc'))
+                    ->when($sort_params === 'price_desc', fn($q) => $q->orderBy('price', 'desc'))
                     ->paginate(15)
             ),
             'registry' => $registry,
