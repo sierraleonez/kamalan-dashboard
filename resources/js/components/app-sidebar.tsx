@@ -15,6 +15,8 @@ import {
 import { dashboard } from '@/routes/admin';
 import type { NavItem } from '@/types';
 import AppLogo from './app-logo';
+import users from '@/routes/admin/users';
+import registries from '@/routes/admin/registries';
 import categories from '@/routes/admin/categories';
 import products from '@/routes/admin/products';
 import merchants from '@/routes/admin/merchants';
@@ -25,6 +27,16 @@ import articles from '@/routes/admin/articles';
 
 
 const mainNavItems: NavItem[] = [
+    {
+        title: 'Users',
+        href: users.index(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Registries',
+        href: registries.index(),
+        icon: LayoutGrid,
+    },
     {
         title: 'Dashboard',
         href: dashboard(),

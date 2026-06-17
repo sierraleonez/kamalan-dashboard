@@ -4,11 +4,13 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\MerchantController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FeaturedMerchantController;
 use App\Http\Controllers\Admin\FeaturedProductController;
+use App\Http\Controllers\Admin\MerchantController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\RegistryController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +29,8 @@ Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Admin resource management
+    Route::resource('users', UserController::class)->only(['index', 'show', 'edit', 'update', 'destroy']);
+    Route::resource('registries', RegistryController::class)->only(['index', 'show', 'edit', 'update', 'destroy']);
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
     Route::resource('merchants', MerchantController::class);
