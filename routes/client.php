@@ -29,6 +29,7 @@ Route::get('/articles', [ArticleController::class, 'index'])->name('articles.ind
 Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
 
 // Static pages
+Route::get('/cerita-kamalan', fn() => inertia('client/static/cerita-kamalan'))->name('cerita-kamalan');
 Route::get('/faq', fn() => inertia('client/static/faq'))->name('faq');
 Route::get('/kebijakan-privasi', fn() => inertia('client/static/privacy-policy'))->name('privacy-policy');
 Route::get('/syarat-ketentuan', fn() => inertia('client/static/terms'))->name('terms');

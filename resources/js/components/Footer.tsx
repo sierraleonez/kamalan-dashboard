@@ -21,9 +21,9 @@ export default function Footer() {
                         <h3 className="font-serif text-white text-xl font-bold mb-6">Tentang Kami</h3>
                         <ul className="space-y-3">
                             <li>
-                                <a href="#" className="text-gray-300 hover:text-white transition-colors">
+                                <Link href="/cerita-kamalan" className="text-gray-300 hover:text-white transition-colors">
                                     Cerita Kamalan
-                                </a>
+                                </Link>
                             </li>
                             {/* <li>
                                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
@@ -77,12 +77,12 @@ export default function Footer() {
                             <a href="https://www.instagram.com/kamalan.registry/" target='_blank' className="text-gray-300 hover:text-white transition-colors">
                                 <Instagram className="w-6 h-6" />
                             </a>
-                            <a href="https://www.tiktok.com/@kamalan.id" className="text-gray-300 hover:text-white transition-colors">
+                            {/* <a href="https://www.tiktok.com/@kamalan.id" className="text-gray-300 hover:text-white transition-colors">
                                 <img src="/images/icons/tiktok-icon.webp" alt="TikTok" className="w-6 h-6" />
                             </a>
                             <a href="https://www.threads.com/@kamalan.id" className="text-gray-300 hover:text-white transition-colors">
                                 <img src="/images/icons/threads-icon.png" alt="Threads" className="w-6 h-6" />
-                            </a>
+                            </a> */}
                             
                             {/* <a href="#" className="text-gray-300 hover:text-white transition-colors">
                                 <Facebook className="w-6 h-6" />

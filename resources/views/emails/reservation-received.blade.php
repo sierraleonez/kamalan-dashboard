@@ -13,32 +13,34 @@
             padding: 20px;
         }
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #fff;
+            color: '#000';
             padding: 30px;
             text-align: center;
             border-radius: 8px 8px 0 0;
         }
         .header h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 20px;
+            font-weight: normal;
+            /* color: black; */
         }
         .content {
             background: #ffffff;
             padding: 30px;
             border: 1px solid #e0e0e0;
-            border-top: none;
+            /* border-top: none; */
         }
         .product-box {
             background: #f9f9f9;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #BBCC77;
             padding: 15px;
             margin: 20px 0;
         }
         .product-name {
             font-size: 18px;
             font-weight: bold;
-            color: #667eea;
+            color: #BBCC77;
             margin-bottom: 8px;
         }
         .greeting-box {
@@ -59,7 +61,7 @@
         .button {
             display: inline-block;
             padding: 12px 30px;
-            background: #667eea;
+            background: #889966;
             color: white;
             text-decoration: none;
             border-radius: 5px;
@@ -73,36 +75,37 @@
 </head>
 <body>
     <div class="header">
-        <h1>🎁 Gift Reserved!</h1>
+        <img src="https://kamalan.co.id/kamalan_logo_green.png" />
+        <h1>Hadiah Direservasi!</h1>
     </div>
     
     <div class="content">
         <p>Hi {{ $reservation->registry->user->name ?? 'there' }},</p>
         
-        <p>Great news! Someone has reserved a gift from your registry <strong>{{ $reservation->registry->name }}</strong>.</p>
+        <p>Berita Gembira! Seseorang akan memesankan hadiah dari registrymu:  <strong>{{ $reservation->registry->name }}</strong>.</p>
         
         <div class="product-box">
             <div class="product-name">{{ $giftCartItem->product->name }}</div>
             <p style="margin: 5px 0;">
-                <span class="label">Quantity:</span> {{ $giftCartItem->quantity }}
+                <span class="label">Jumlah:</span> {{ $giftCartItem->quantity }}
             </p>
             <p style="margin: 5px 0;">
-                <span class="label">Reserved by:</span> {{ $reservation->display_name }}
+                <span class="label">Direservasi oleh:</span> {{ $reservation->display_name }}
             </p>
         </div>
         
         @if($reservation->greeting)
         <div class="greeting-box">
-            <p style="margin: 0;"><strong>💌 Message from {{ $reservation->display_name }}:</strong></p>
+            <p style="margin: 0;"><strong>💌 Pesan dari {{ $reservation->display_name }}:</strong></p>
             <p style="margin: 10px 0 0 0;">{{ $reservation->greeting }}</p>
         </div>
         @endif
         
-        <p>This means someone is planning to give you this gift for your special occasion. How exciting! 🎉</p>
+        <p>Ini artinya seseorang hendak berbagi kebahagiaan dengan kamu. Asyik! 🎉</p>
         
         <div style="text-align: center;">
             <a href="{{ url('/registry/' . $reservation->registry->magic_link) }}" class="button">
-                View Your Registry
+                Lihat Registry
             </a>
         </div>
     </div>
