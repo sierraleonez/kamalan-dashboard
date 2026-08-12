@@ -136,6 +136,11 @@ export default function AuthModal({ isOpen, onClose, onSuccess, redirectTo }: Au
                                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                             </button>
                         </div>
+                        {!isLogin && (
+                            <p className="mt-1 text-xs text-gray-500">
+                                Minimal 8 karakter, dengan kombinasi huruf besar dan kecil, angka, dan karakter spesial.
+                            </p>
+                        )}
                         {errors.password && (
                             <p className="mt-1 text-sm text-red-600">{errors.password}</p>
                         )}
