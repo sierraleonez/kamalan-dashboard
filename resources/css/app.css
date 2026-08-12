@@ -139,6 +139,26 @@
     --sidebar-ring: oklch(0.439 0 0);
 }
 
+/* Slightly smaller type scale on mobile. Only the font-size tokens are
+   overridden, so spacing and layout stay untouched. */
+@media (max-width: 639px) {
+    :root {
+        --text-xs: 0.6875rem;
+        --text-sm: 0.8125rem;
+        --text-base: 0.9375rem;
+        --text-lg: 1rem;
+        --text-xl: 1.125rem;
+        --text-2xl: 1.3125rem;
+        --text-3xl: 1.625rem;
+        --text-4xl: 1.875rem;
+        --text-5xl: 2.5rem;
+        --text-6xl: 3rem;
+        --text-7xl: 3.75rem;
+        --text-8xl: 4.5rem;
+        --text-9xl: 6rem;
+    }
+}
+
 @layer base {
     * {
         @apply border-border;

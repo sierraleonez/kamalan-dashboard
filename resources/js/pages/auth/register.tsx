@@ -67,7 +67,13 @@ export default function Register() {
                                     autoComplete="new-password"
                                     name="password"
                                     placeholder="Password"
+                                    minLength={8}
                                 />
+                                <p className="text-muted-foreground text-xs">
+                                    At least 8 characters, with upper and
+                                    lowercase letters, a number and a special
+                                    character.
+                                </p>
                                 <InputError message={errors.password} />
                             </div>
 
